@@ -9,16 +9,22 @@ use Symfony\Component\Routing\Annotation\Route;
 class HelloController extends AbstractController
 {
     private array $messages = [
-        "Hello", "Hi", "Bye!"
+        ['message' => 'Hello', 'created' => '2022/06/12'],
+        ['message' => 'Hi', 'created' => '2022/04/12'],
+        ['message' => 'Bye!', 'created' => '2021/05/12']
     ];
 
-    #[Route('/', name: 'app_index')]
+    //#[Route('/', name: 'app_index')]
     #[Route('/{limit?3}', name: 'app_index')]
     public function index(int $limit): Response
     {
-        return new Response(implode(',', $this->messages));
-        return new Response(implode(',', array_slice($this->messages, 0, $limit)));
-        return $this->render('hello/index.html.twig', ['message' => implode(',', array_slice($this->messages, 0, $limit))]);
+        return $this->render(
+            'hello/index.html.twig',
+            [
+                'messages' => $this->messages,
+                'limit' => $limit
+            ]
+        );
     }
 
     #[Route('/messages/{id<\d+>}', name: 'app_show_one')]
