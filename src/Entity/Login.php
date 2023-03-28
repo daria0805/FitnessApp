@@ -2,12 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\AdminRepository;
+use App\Repository\LoginRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: AdminRepository::class)]
-#[ORM\Table(name: '`admin`')]
-class Admin
+#[ORM\Entity(repositoryClass: LoginRepository::class)]
+class Login
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -18,7 +17,7 @@ class Admin
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $Email = null;
+    private ?string $email = null;
 
     #[ORM\Column(length: 255)]
     private ?string $password = null;
@@ -42,12 +41,12 @@ class Admin
 
     public function getEmail(): ?string
     {
-        return $this->Email;
+        return $this->email;
     }
 
-    public function setEmail(string $Email): self
+    public function setEmail(string $email): self
     {
-        $this->Email = $Email;
+        $this->email = $email;
 
         return $this;
     }

@@ -2,3 +2,7 @@ controllers:
     resource: ../src/Controller/
     type: attribute
 
+admin_controller_add:
+    path: /admin/add
+    controller: App\Controller\AdminController::add
+    methods: POST
