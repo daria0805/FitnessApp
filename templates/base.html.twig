@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -9,6 +10,8 @@
         {% endblock %}
     </head>
     <body>
+    {% block header %}
+    <header>
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">
@@ -33,6 +36,9 @@
         <li class="nav-item">
           <a class="nav-link" href="#">Profile</a>
         </li>
+         <li class="nav-item">
+          <a class="nav-link" href="/{{app.user ? 'logout' : 'login' }}">{{app.user ? 'Logout' : 'Login' }}</a>
+        </li>
         {# <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
           <div class="dropdown-menu">
@@ -50,6 +56,19 @@
       </form>
     </div>
   </div>
-</nav> 
+</nav>
+</header>
+ {% endblock %}
+
+  {% block body %}{% endblock %}
+   {% block footer %}
+                <footer class="bg-gray-600 py-6 mt-20">
+                    <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.025);">
+                    © 2023 Copyright:
+              <a class="text-reset fw-bold">Daria Bobitan</a>
+                  </div>
+                </footer>
+{% endblock %}
     </body>
+ 
 </html>
