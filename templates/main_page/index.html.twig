@@ -6,9 +6,14 @@
 <style>
     .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    {# body {
+
+background: linear-gradient(224.08deg, #9CC6ED 7.75%, #ADA1DF 68.65%);
+
+    } #}
 </style>
 
-<div class="example-wrapper">
+{# <div class="example-wrapper">
     <h1>Hello {{ controller_name }}! ✅</h1>
 
     This friendly message is coming from:
@@ -16,6 +21,65 @@
         <li>Your controller at <code><a href="{{ 'D:/AN_4/licenta/fitnessapp/FitnessApp/src/Controller/MainPageController.php'|file_link(0) }}">src/Controller/MainPageController.php</a></code></li>
         <li>Your template at <code><a href="{{ 'D:/AN_4/licenta/fitnessapp/FitnessApp/templates/main_page/index.html.twig'|file_link(0) }}">templates/main_page/index.html.twig</a></code></li>
     </ul>
-</div>
+</div> #}
+
+{# main content #}
+
+<div class="px-4 pt-5 my-5 text-center border-bottom">
+    <h1 class="display-5 fw-bold text-body-emphasis">Your journey</h1>
+        <div class="col-lg-6 mx-auto">
+        <p class="lead mb-4">“If I can see it and believe it, then I can achieve it.”</p>
+        <footer class="blockquote-footer"> <cite title="Source Title">Arnold Schwarzenegger</cite></footer>
+            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
+            <div class="overflow-hidden">
+                <div class="container px-5">
+                {# <button type="button" class="btn btn-primary btn-lg px-4 me-sm-3">Learn more</button> #}
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        Learn More
+                    </button><br><br>
+
+                    {# modal #}
+
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Why is fitness so important?</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Fitness is an essential part of a healthy lifestyle, and it can help you feel better both physically and mentally. 
+                                Engaging in regular exercise can help reduce your risk of chronic diseases, improve your heart health, and boost your energy levels. 
+                                Whether you prefer running, weightlifting, yoga, or any other type of physical activity, there's no shortage of options to help you get fit and stay active.
+                                One of the great things about fitness is that it's a journey, not a destination. 
+                                You don't need to be an Olympic athlete to experience the benefits of exercise, and you can start at any age or fitness level. 
+                                Setting achievable goals and tracking your progress can help you stay motivated and continue to improve over time.
+                                In addition to physical benefits, fitness can also have positive effects on your mental health. 
+                                Regular exercise has been shown to reduce symptoms of anxiety and depression, boost mood and self-esteem, and improve cognitive function. 
+                                It can also be a great way to socialize and meet new people, whether through group fitness classes or team sports.
+                                Remember, it's important to approach fitness in a safe and sustainable way. 
+                                Start slowly and gradually increase your activity level over time, and always listen to your body. 
+                                Whether you're looking to lose weight, build muscle, or simply improve your overall health and well-being, fitness can be a fun and rewarding way to achieve your goals. 
+                                So why not start today?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                            </div>
+                        </div>
+                        </div>
+
+                    <img src="https://i.postimg.cc/N0YNC8zb/imag-People.jpg" class="img-fluid border rounded-1 rounded mx-auto d-block shadow-lg mb-4" alt="image" width="450" height="200" loading="lazy">
+                    
+                </div>
+            </div>
+            </div>
+        </div>
+        
+  </div>
+
+
+
+
 
 {% endblock %}

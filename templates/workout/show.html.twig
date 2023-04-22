@@ -1,0 +1,39 @@
+{% extends "./base.html.twig" %}
+
+{% block body %}
+    <div class="sm:w-3/5 w-4/5 mx-auto">
+        <h1 class="pt-20 sm:text-5xl md:text-7xl text-4xl font-bold text-center">
+            {{ workout.name }}
+        </h1>
+
+        <div class="py-10 text-center">
+            <div class="inline-block sm:pt-1">
+                <h2 class="font-bold">
+                    Created by: {{user.name}}
+                </h2>
+
+                {# <p class="text-sm text-gray-600">
+                    28-01-2022 4 min. read
+                </p> #}
+            </div>
+        </div>
+
+        <p class="text-xl py-6">
+            {{ workout.description }}
+        </p>
+
+        {% if app.user and workout.userId == app.user.id %}
+            <a 
+                href="/workouts/edit/{{ workout.id }}"
+                class="bg-green-500 font-bold py-2 px-4 rounded transition-all hover:bg-green-300">
+                Edit workout
+            </a>
+
+            <a 
+                href="/workouts/delete/{{ workout.id }}"
+                class="bg-red-500 font-bold py-2 px-4 ml-6 rounded transition-all hover:bg-red-300">
+                Delete workout
+            </a>
+        {% endif %}
+    </div>
+{% endblock %}
