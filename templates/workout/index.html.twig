@@ -34,7 +34,7 @@
               </p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
-                  <button type="button" class="btn btn-md btn-outline-primary">Try it!</button>
+                  <button onclick="window.location.href = '/yoga';">Try it!</button>
                 </div>
               </div>
             </div>
@@ -53,7 +53,7 @@
               </p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
-                  <button type="button" class="btn btn-md btn-outline-primary">Try it!</button>
+                  <button onclick="window.location.href = '/create/workout';">Try it!</button>
                 </div>
               </div>
             </div>
@@ -77,6 +77,24 @@
             </div>
           </div>
         </div>
-
+        </div>
+        {# -------------------------CREATE WORKOUT #}
+          <div class="col">
+          <div class="card shadow-sm">
+            
+            <div class="card-body">
+              <p class="card-text">
+              <h4>Create your own workout!</h4> 
+                    Feel free to choose from a variety of at home exercises! You don't need gym equipment only dedication and the will to sweat it out!
+              </p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <button onclick="window.location.href = '/exercise/add';">Create Workout +</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
 
 {% endblock %}

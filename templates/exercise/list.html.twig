@@ -1,0 +1,55 @@
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<table class="table table-striped">
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Duration</th>
+          </tr>
+          </thead>
+          <tbody>
+
+          {% for exercise in exercises %}
+      <tr>
+        <td>{{ exercise.id }}</td>
+        <td>{{ exercise.name }}</td>
+        <td>{{ exercise.duration }}</td>
+      </tr>
+    {% endfor %}
+          </tbody>
+        </table>
+
+        {# <a href="{{ path('exercise_edit', {'id': exercise.id}) }}">Edit</a> #}
+
+    {# <form action="{{ path('exercise_update', {'id': exercise.id}) }}" method="POST">
+        <button type="submit">Update</button>
+        <input type="hidden" name="_method" value="PUT">
+        {{ form_rest(form) }}
+    </form> #}
+        {% endblock %} 
+
+        {# {% block body %}
+    <h1>{{ exercise.name }}</h1>
+
+    <table>
+        <tr>
+            <th>Duration</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>{{ exercise.duration }}</td>
+            <td>{{ exercise.description }}</td>
+        </tr>
+    </table>
+
+    <a href="{{ path('exercise_edit', {'id': exercise.id}) }}">Edit</a>
+
+    <form action="{{ path('exercise_update', {'id': exercise.id}) }}" method="POST">
+        <button type="submit">Update</button>
+        <input type="hidden" name="_method" value="PUT">
+        {{ form_rest(form) }}
+    </form>
+{% endblock %} #}

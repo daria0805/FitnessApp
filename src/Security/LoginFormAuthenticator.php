@@ -25,6 +25,12 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
     {
     }
 
+    /**
+     * authenticate
+     *
+     * @param  mixed $request
+     * @return Passport
+     */
     public function authenticate(Request $request): Passport
     {
         $email = $request->request->get('email', '');
@@ -39,7 +45,14 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
             ]
         );
     }
-
+    /**
+     * onAuthenticationSuccess
+     *
+     * @param  mixed $request
+     * @param  mixed $token
+     * @param  mixed $firewallName
+     * @return Response
+     */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
