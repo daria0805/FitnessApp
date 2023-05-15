@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<style>
+    .workout-timer {
+  text-align: center;
+  font-size: 36px;
+  margin-bottom: 20px;
+}
+
+.workout-exercise-name {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.workout-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+</style>
+
+<body>
+    <h1>Workout</h1>
+    <div id="exercise-container">
+    {% for exercise in exercises %}
+        <h2 class="workout-exercise-name" id="exercise-name">{{ exercise.name }}</h2>
+        <div class="workout-timer" id="timer">{{ exercise.duration }}</div>
+        {% endfor %}
+        <button class="btn btn-primary" onclick="moveToNextExercise()">Next Exercise</button>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+    const exercises = {{ exercises|json_encode|raw }};
+    let currentIndex = 0;
+
+    function startExercise() {
+        const exercise = exercises[currentIndex];
+        const exerciseNameElement = document.getElementById('exercise-name');
+        const timerElement = document.getElementById('timer');
+
+        exerciseNameElement.innerText = exercise.name;
+        timerElement.innerText = exercise.duration;
+
+        // Countdown timer logic
+        let duration = exercise.duration;
+        const timerId = setInterval(() => {
+            duration--;
+            timerElement.innerText = duration;
+
+            if (duration <= 0) {
+                clearInterval(timerId);
+                moveToNextExercise();
+            }
+        }, 1000);
+    }
+
+    function moveToNextExercise() {
+        currentIndex++;
+
+        if (currentIndex < exercises.length) {
+            startExercise();
+        } else {
+            showCongratulations();
+        }
+    }
+
+    function showCongratulations() {
+        // Display a congratulation message or redirect to another page
+        alert('Congratulations! Workout completed!');
+    }
+
+    // Start the workout
+    startExercise();
+</script>
+</body>
+{% endblock %}

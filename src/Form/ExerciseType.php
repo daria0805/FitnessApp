@@ -6,6 +6,7 @@ use App\Entity\Exercise;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 class ExerciseType extends AbstractType
 {
@@ -14,6 +15,14 @@ class ExerciseType extends AbstractType
         $builder
             ->add('name')
             ->add('duration')
+            ->add('photoLink', null, [
+                'required' => false,
+            ])
+            ->add('photo', FileType::class, [
+                'label' => 'Photo',
+                'required' => false,
+                'mapped' => false, // Not mapped to the entity directly
+            ])
         ;
     }
 

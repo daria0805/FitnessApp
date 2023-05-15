@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ExerciseRepository;
+use Doctrine\DBAL\Types\BlobType;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ExerciseRepository::class)]
@@ -18,6 +19,10 @@ class Exercise
 
     #[ORM\Column]
     private ?int $duration = null;
+
+    #[ORM\Column(length: 255, nullable:true)]
+    private ?string $photoLink;
+
 
     public function getId(): ?int
     {
@@ -44,6 +49,17 @@ class Exercise
     public function setDuration(int $duration): self
     {
         $this->duration = $duration;
+
+        return $this;
+    }
+    public function getPhotoLink(): ?string
+    {
+        return $this->photoLink;
+    }
+
+    public function setPhotoLink(?string $photoLink): self
+    {
+        $this->photoLink = $photoLink;
 
         return $this;
     }

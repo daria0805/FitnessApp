@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Exercise;
 use App\Form\ExerciseType;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Form\DeleteFormType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class ExerciseController extends AbstractController
 {
@@ -32,9 +34,9 @@ class ExerciseController extends AbstractController
      */
     public function index(): Response
     {
-        $recette = $this->entityManager->getRepository(Exercise::class);
+        $exercises = $this->entityManager->getRepository(Exercise::class);
         return $this->render('exercise/index.html.twig', [
-            'controller_name' => 'ExerciseController',
+            'exercises' => $exercises,
         ]);
     }
     /**
@@ -58,30 +60,87 @@ class ExerciseController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-    // /**
-    //  * updateAction
-    //  * @param  mixed $request
-    //  * @param  mixed $exercise
-    //  * @return Response
-    //  */
-    // #[Route('/exercise/edit', name: 'exercise_edit')]
-    // public function update(Request $request, Exercise $exercise): Response
-    // {
-    //     $form = $this->createForm(ExerciseType::class, $exercise);
-    //     $form->handleRequest($request);
-    //     if ($form->isSubmitted() && $form->isValid()) {
-    //         $entityManager = $this->entityManager;
-    //          return $this->redirectToRoute('exercise_list', ['id' => $exercise->getId()]);
-    //     }
-    //     return $this->render('exercise/edit.html.twig', [
-    //         'exercise' => $exercise,
-    //          'form' => $form->createView(),
-    //     ]);
-    // }
+
+    #[Route('/exercise/{id}/edit', name: 'exercise_edit')]
+    /**
+     * edit
+     *
+     * @param  mixed $request
+     * @param  mixed $exercise
+     * @return Response
+     */
+    public function edit(Request $request, Exercise $exercise): Response
+    {
+        $form = $this->createForm(ExerciseType::class, $exercise);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->entityManager;
+            $entityManager->flush();
+
+            return $this->redirectToRoute('exercise_list', ['id' => $exercise->getId()]);
+        }
+
+        return $this->render('exercise/edit.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+
+    #[Route('/exercise/{id}/delete', name: 'exercise_delete')]
+    /**
+     * delete
+     *
+     * @param  mixed $request
+     * @param  mixed $exercise
+     * @param  mixed $entityManager
+     * @return Response
+     */
+    public function delete(Request $request, Exercise $exercise): Response
+    {
+        // $form = $this->createForm(DeleteFormType::class, null, [
+        //     'action' => $this->generateUrl('exercise_delete', ['id' => $exercise->getId()]),
+        // ]);
+
+        // $form->handleRequest($request);
+
+        // if ($form->isSubmitted() && $form->isValid()) {
+        //     return $this->redirectToRoute('exercise_list');
+        // }
+        // return $this->render('exercise/delete.html.twig', [
+        //     'form' => $form->createView(),
+        //     'exercise' => $exercise,
+        // ]);
+
+        $entityManager = $this->entityManager;
+
+        $form = $this->createFormBuilder()
+            ->add('confirm', SubmitType::class, ['label' => 'Delete'])
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->remove($exercise);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Exercise deleted successfully.');
+
+            return $this->redirectToRoute('exercise_list');
+        }
+
+        return $this->render('exercise/delete.html.twig', [
+            'exercise' => $exercise,
+            'form' => $form->createView(),
+        ]);
+    }
 
     /**
-     * @Route("/exercise/list", name="exercise_list")
+     * list
+     *
+     * @return Response
      */
+    #[Route('/exercise/list', name: 'exercise_list')]
     public function list(): Response
     {
         $exercises = $this->entityManager->getRepository(Exercise::class)->findAll();

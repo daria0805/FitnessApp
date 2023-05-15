@@ -1,9 +1,11 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<form action="{{ path('exercise_update', {'id': exercise.id}) }}" method="POST">
-        <button type="submit">Update</button>
-        <input type="hidden" name="_method" value="PUT">
-        {{ form_rest(form) }}
-    </form> 
-{% endblock %} 
+    <h1>Edit Exercise</h1>
+
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button type="submit">Save</button>
+    {{ form_end(form) }}
+
+{% endblock %}

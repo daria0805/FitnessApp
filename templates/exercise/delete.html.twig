@@ -1,0 +1,10 @@
+{% block body %}
+    <h1>Delete Exercise</h1>
+
+    <p>Are you sure you want to delete the exercise "{{ exercise.name }}"?</p>
+
+    <form method="post" action="{{ path('exercise_delete', { 'id': exercise.id }) }}">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ exercise.id) }}">
+        <button type="submit">Delete</button>
+    </form>
+{% endblock %}
