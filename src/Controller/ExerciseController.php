@@ -3,14 +3,13 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
-use App\Entity\Exercise;
 use App\Form\ExerciseType;
+use App\Repository\ExerciseRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Form\DeleteFormType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use App\Entity\Exercise;
 
 class ExerciseController extends AbstractController
 {
@@ -26,7 +25,6 @@ class ExerciseController extends AbstractController
             $this->entityManager = $entityManager;
     }
 
-    #[Route('/exercise', name: 'app_exercise')]
     /**
      * index
      *
@@ -40,7 +38,10 @@ class ExerciseController extends AbstractController
         ]);
     }
     /**
-     * @Route("/exercise/add", name="exercise_add")
+     * add
+     *
+     * @param  mixed $request
+     * @return Response
      */
     public function add(Request $request): Response
     {
@@ -61,7 +62,6 @@ class ExerciseController extends AbstractController
         ]);
     }
 
-    #[Route('/exercise/{id}/edit', name: 'exercise_edit')]
     /**
      * edit
      *
@@ -86,61 +86,34 @@ class ExerciseController extends AbstractController
         ]);
     }
 
-
-    #[Route('/exercise/{id}/delete', name: 'exercise_delete')]
     /**
      * delete
      *
-     * @param  mixed $request
      * @param  mixed $exercise
-     * @param  mixed $entityManager
+     * @param  mixed $id
+     * @ParamConverter("id", class="Exercise", options={"id": "id"})
      * @return Response
      */
-    public function delete(Request $request, Exercise $exercise): Response
+    public function delete(int $id): Response
     {
-        // $form = $this->createForm(DeleteFormType::class, null, [
-        //     'action' => $this->generateUrl('exercise_delete', ['id' => $exercise->getId()]),
-        // ]);
-
-        // $form->handleRequest($request);
-
-        // if ($form->isSubmitted() && $form->isValid()) {
-        //     return $this->redirectToRoute('exercise_list');
-        // }
-        // return $this->render('exercise/delete.html.twig', [
-        //     'form' => $form->createView(),
-        //     'exercise' => $exercise,
-        // ]);
-
         $entityManager = $this->entityManager;
-
-        $form = $this->createFormBuilder()
-            ->add('confirm', SubmitType::class, ['label' => 'Delete'])
-            ->getForm();
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->remove($exercise);
-            $entityManager->flush();
-
-            $this->addFlash('success', 'Exercise deleted successfully.');
-
-            return $this->redirectToRoute('exercise_list');
+        $exercise = $entityManager->getRepository(Exercise::class)->find($id);
+        if (!$exercise) {
+            throw $this->createNotFoundException('Exercise not found');
         }
-
-        return $this->render('exercise/delete.html.twig', [
+        $entityManager->remove($exercise);
+        $entityManager->flush();
+        return $this->redirectToRoute('exercise_list');
+        return $this->render('delete.html.twig', [
             'exercise' => $exercise,
-            'form' => $form->createView(),
         ]);
+        // NU MERGE DELOC
     }
-
     /**
      * list
      *
      * @return Response
      */
-    #[Route('/exercise/list', name: 'exercise_list')]
     public function list(): Response
     {
         $exercises = $this->entityManager->getRepository(Exercise::class)->findAll();

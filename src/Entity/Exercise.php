@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\ExerciseRepository;
-use Doctrine\DBAL\Types\BlobType;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ExerciseRepository::class)]

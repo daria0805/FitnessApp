@@ -6,3 +6,32 @@ admin_controller_add:
     path: /admin/add
     controller: App\Controller\AdminController::add
     methods: POST
+
+exercise_index:
+    path: /exercise
+    controller: App\Controller\ExerciseController::index
+    methods: GET
+
+exercise_add:
+    path: /exercise/add
+    controller: App\Controller\ExerciseController::add
+    methods: [GET, POST]
+
+exercise_edit:
+    path: /exercise/{id}/edit
+    controller: App\Controller\ExerciseController::edit
+    methods: [GET, POST]
+    requirements:
+        id: '\d+'
+
+exercise_delete:
+    path: /exercise/{id}/delete
+    controller: App\Controller\ExerciseController::delete
+    methods: [GET, POST]
+    requirements:
+        id: '\d+'
+
+exercise_list:       
+    path: /exercise/list
+    controller: App\Controller\ExerciseController::list
+    methods: GET
