@@ -5,8 +5,12 @@
 
     <p>Are you sure you want to delete the exercise "{{ exercise.name }}"?</p>
 
-    {# <form method="post" action="{{ path('exercise_delete', { 'id': exercise.id }) }}">
+    <form method="post" action="{{ path('exercise_delete', { 'id': exercise.id }) }}">
         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ exercise.id) }}">
         <button type="submit">Delete</button>
-    </form> #}
+    </form>
+
+    {# {{ form_start(form) }}
+    {{ form_widget(form) }}
+    {{ form_end(form) }} #}
 {% endblock %}

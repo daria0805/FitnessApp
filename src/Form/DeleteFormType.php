@@ -12,17 +12,20 @@ class DeleteFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-        ->add('delete', SubmitType::class, [
-            'label' => 'Delete'
+        ->add('confirm', SubmitType::class, [
+            'label' => 'Delete',
             // 'attr' => ['class' => 'btn btn-danger'],
         ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
+        // $resolver->setDefaults([
+        //     'method' => 'DELETE',
+        //     'csrf_protection' => true,
+        // ]);
         $resolver->setDefaults([
-            'method' => 'DELETE',
-            'csrf_protection' => true,
+            'mapped' => false,
         ]);
     }
 }

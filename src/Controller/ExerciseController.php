@@ -7,7 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use App\Form\ExerciseType;
-use App\Repository\ExerciseRepository;
+use App\Form\DeleteFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Exercise;
 
@@ -91,10 +91,10 @@ class ExerciseController extends AbstractController
      *
      * @param  mixed $exercise
      * @param  mixed $id
-     * @ParamConverter("id", class="Exercise", options={"id": "id"})
+     * @ParamConverter("exercise", class="App\Entity\Exercise")
      * @return Response
      */
-    public function delete(int $id): Response
+    public function delete(Exercise $exercise, int $id): Response
     {
         $entityManager = $this->entityManager;
         $exercise = $entityManager->getRepository(Exercise::class)->find($id);
@@ -107,7 +107,19 @@ class ExerciseController extends AbstractController
         return $this->render('delete.html.twig', [
             'exercise' => $exercise,
         ]);
-        // NU MERGE DELOC
+
+        // $form = $this->createForm(DeleteFormType::class, $exercise);
+        // $form->handleRequest($request);
+
+        // if ($form->isSubmitted() && $form->isValid()) {
+        //     $entityManager = $this->entityManager;
+        //     $entityManager->remove($exercise);
+        //     $entityManager->flush();
+
+        //     $this->addFlash('success', 'exercise deleted successfully.');
+        // }
+
+        // return $this->redirectToRoute('exercise_list');
     }
     /**
      * list
