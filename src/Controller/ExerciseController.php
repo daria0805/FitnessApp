@@ -107,19 +107,6 @@ class ExerciseController extends AbstractController
         return $this->render('delete.html.twig', [
             'exercise' => $exercise,
         ]);
-
-        // $form = $this->createForm(DeleteFormType::class, $exercise);
-        // $form->handleRequest($request);
-
-        // if ($form->isSubmitted() && $form->isValid()) {
-        //     $entityManager = $this->entityManager;
-        //     $entityManager->remove($exercise);
-        //     $entityManager->flush();
-
-        //     $this->addFlash('success', 'exercise deleted successfully.');
-        // }
-
-        // return $this->redirectToRoute('exercise_list');
     }
     /**
      * list
