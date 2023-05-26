@@ -35,3 +35,23 @@ exercise_list:
     path: /exercise/list
     controller: App\Controller\ExerciseController::list
     methods: GET
+
+
+profile:
+    path: /profile
+    controller: App\Controller\ProfileController::profile
+    methods: GET
+
+# show_diet_plan:
+#     path: /show-diet-plan
+#     controller: App\Controller\ProfileController::showDietPlan
+#     methods: GET
+
+add_weight:
+    path: /profile/add-weight
+    controller: App\Controller\ProfileController::addWeight
+
+calculate_calories:
+    path: /profile/calculate-calories
+    controller: App\Controller\ProfileController::calculateCalories
+    
