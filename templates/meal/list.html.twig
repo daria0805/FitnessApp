@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<table class="table table-striped">
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>Food Time</th>
+            <th>Food Name</th>
+            <th>Calories</th>
+            <th>Grams</th>
+            <th>Carbs</th>
+            <th>Fat</th>
+            <th>Protein</th>
+          </tr>
+          </thead>
+          <tbody>
+
+          {% for meal in meals %}
+      <tr>
+        <td>{{ meal.id }}</td>
+        <td>{{ meal.foodTime }}</td>
+        <td>{{ meal.foodName }}</td>
+        <td>{{ meal.calories }}</td>
+        <td>{{ meal.grams }}</td>
+        <td>{{ meal.carbs }}</td>
+        <td>{{ meal.fat }}</td>
+        <td>{{ meal.protein }}</td>
+        <td>
+            <a href="{{ path('meal_edit', { 'id': meal.id }) }}">Edit</a>
+            <a href="{{ path('meal_delete', { 'id': meal.id }) }}">Delete</a>
+        </td>
+      </tr>
+    {% endfor %}
+          </tbody>
+        </table>
+        {% endblock %} 

@@ -67,4 +67,32 @@ weight_list:
     path: /user/list
     controller: App\Controller\UserController::list
     methods: GET
+    
+# -------------------MEAL-----------
+meal_index:
+    path: /meal
+    controller: App\Controller\MealController::index
+    methods: GET
 
+meal_create:
+    path: /meal/add
+    controller: App\Controller\MealController::add
+    methods: [GET, POST]
+
+meal_edit:
+    path: /meal/{id}/edit
+    controller: App\Controller\MealController::edit
+    methods: [GET, POST]
+    requirements:
+        id: '\d+'
+
+meal_delete:
+    path: /meal/{id}/delete
+    controller: App\Controller\MealController::delete
+    methods: GET
+    requirements:
+        id: '\d+'
+meal_list:       
+    path: /meal/list
+    controller: App\Controller\MealController::list
+    methods: GET

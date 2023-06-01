@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Delete Meals</h1>
+
+    <p>Are you sure you want to delete the meal "{{ meal.name }}"?</p>
+
+    <form method="post" action="{{ path('meal_delete', { 'id': meal.id }) }}">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ meal.id) }}">
+        <button type="submit">Delete</button>
+    </form>
+{% endblock %}

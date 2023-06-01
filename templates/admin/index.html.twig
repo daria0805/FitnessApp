@@ -13,9 +13,10 @@
 
     {% if is_granted('ROLE_ADMIN') %}
         <h2>Welcome, Admin!</h2>
-        <button onclick="window.location.href = '/exercise/add';">Create Workout +</button>
-        {# buton pentru baza de date cu mancare #}
-        {# <button onclick="window.location.href = '/exercise/add';">Create Workout +</button> #}
+        <button onclick="window.location.href = '/exercise/add';">Create Workout +</button><br><br>
+        <button onclick="window.location.href = '/exercise/list';">List of exercises</button><br><br>
+        <button onclick="window.location.href = '/meal/add';">Create Meal</button><br><br>
+        <button onclick="window.location.href = '/meal/list';">List of meals</button>
     {% endif %}
 </div>
 {% endblock %}
