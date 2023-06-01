@@ -77,11 +77,91 @@ class UserController extends AbstractController
 
             $this->entityManager->persist($dietPlan);
             $this->entityManager->flush();
-            return new Response('Success');
         }
 
         return $this->render('user/calculate_diet_plan.html.twig', [
             'form' => $form->createView()
+        ]);
+    }
+    /**
+     * edit
+     *
+     * @param  mixed $request
+     * @param  mixed $dietPlanDatabase
+     * @return Response
+     */
+    public function edit(Request $request, DietPlanDatabase $dietPlanDatabase): Response
+    {
+        $form = $this->createForm(WeightFormType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $newWeight  = $form->get('weight')->getData();
+
+            //calculate total calories
+            $activityFactor = 1.2;
+            $bmr = 370 + (21.6 * ($newWeight  - (0.23 * $newWeight )));
+            $newtotalCalorieIntake = $bmr * $activityFactor;
+            $newtotalCalorieIntake = round($newtotalCalorieIntake);
+
+            // Define the percentage distribution for each meal
+            $breakfastPercentage = 0.3; // 30%
+            $lunchPercentage = 0.4; // 40%
+            $dinnerPercentage = 0.3; // 30%
+
+            // Calculate the calories for each meal based on the percentage distribution
+            $newbreakfastCalories = $newtotalCalorieIntake * $breakfastPercentage;
+            $newlunchCalories = $newtotalCalorieIntake * $lunchPercentage;
+            $newdinnerCalories = $newtotalCalorieIntake * $dinnerPercentage;
+
+            //update the values in the database
+            $dietPlanDatabase->setWeight($newWeight);
+            $dietPlanDatabase->setTotalCalorieIntake($newtotalCalorieIntake);
+            $dietPlanDatabase->setBreakfastCalories($newbreakfastCalories);
+            $dietPlanDatabase->setLunchCalories($newlunchCalories);
+            $dietPlanDatabase->setDinnerCalories($newdinnerCalories);
+
+            //persist into database
+            $this->entityManager->persist($dietPlanDatabase);
+            $this->entityManager->flush();
+            return $this->redirectToRoute('weight_list', ['id' => $dietPlanDatabase->getId()]);
+        }
+
+        return $this->render('user/edit.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+    /**
+     * delete
+     *
+     * @param  mixed $dietPlanDatabase
+     * @param  mixed $id
+     * @return Response
+     */
+    public function delete(DietPlanDatabase $dietPlanDatabase, int $id): Response
+    {
+        $entityManager = $this->entityManager;
+        $dietPlanDatabase = $entityManager->getRepository(DietPlanDatabase::class)->find($id);
+        if (!$dietPlanDatabase) {
+            throw $this->createNotFoundException('Exercise not found');
+        }
+        $entityManager->remove($dietPlanDatabase);
+        $entityManager->flush();
+        return $this->redirectToRoute('weight_list');
+        return $this->render('delete.html.twig', [
+            'dietPlanDatabase' => $dietPlanDatabase,
+        ]);
+    }
+    /**
+     * list
+     *
+     * @return Response
+     */
+    public function list(): Response
+    {
+        $dietPlanDatabases = $this->entityManager->getRepository(DietPlanDatabase::class)->findAll();
+
+        return $this->render('user/list.html.twig', [
+            'dietPlanDatabases' => $dietPlanDatabases,
         ]);
     }
 }

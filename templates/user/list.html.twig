@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<table class="table table-striped">
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>Weight</th>
+            <th>Total Calorie Intake</th>
+            <th>Breakfast Calories</th>
+            <th>Lunch Calories</th>
+            <th>Dinner Calories</th>
+          </tr>
+          </thead>
+          <tbody>
+
+          {% for dietPlanDatabase in dietPlanDatabases %}
+      <tr>
+        <td>{{ dietPlanDatabase.id }}</td>
+        <td>{{ dietPlanDatabase.weight }}</td>
+        <td>{{ dietPlanDatabase.totalCalorieIntake }}</td>
+        <td>{{ dietPlanDatabase.breakfastCalories }}</td>
+        <td>{{ dietPlanDatabase.lunchCalories }}</td>
+        <td>{{ dietPlanDatabase.dinnerCalories }}</td>
+        <td>
+            <a href="{{ path('weight_edit', { 'id': dietPlanDatabase.id }) }}">Edit</a>
+            <a href="{{ path('weight_delete', { 'id': dietPlanDatabase.id }) }}">Delete</a>
+        </td>
+      </tr>
+    {% endfor %}
+          </tbody>
+        </table>
+        {% endblock %} 

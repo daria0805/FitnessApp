@@ -2,6 +2,10 @@ controllers:
     resource: ../src/Controller/
     type: attribute
 
+app_homepage:
+    path: /
+    controller: App\Controller\MainPageController::index
+
 admin_controller_add:
     path: /admin/add
     controller: App\Controller\AdminController::add
@@ -51,4 +55,20 @@ add_to_database:
     path: /user/add_to_database
     controller: App\Controller\UserController::addToDatabase
     methods: [GET, POST]
-    
+
+weight_edit:
+    path: /user/{id}/edit
+    controller: App\Controller\UserController::edit
+    methods: [GET, POST]
+    requirements:
+        id: '\d+'
+weight_delete:
+    path: /user/{id}/delete
+    controller: App\Controller\UserController::delete
+    methods: [GET, POST]
+    requirements:
+        id: '\d+'
+weight_list:       
+    path: /user/list
+    controller: App\Controller\UserController::list
+    methods: GET

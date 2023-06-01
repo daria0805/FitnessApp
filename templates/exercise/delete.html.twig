@@ -9,8 +9,4 @@
         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ exercise.id) }}">
         <button type="submit">Delete</button>
     </form>
-
-    {# {{ form_start(form) }}
-    {{ form_widget(form) }}
-    {{ form_end(form) }} #}
 {% endblock %}
