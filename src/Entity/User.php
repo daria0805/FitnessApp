@@ -68,7 +68,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        if ($this->email === 'daria@html') {
+            // Assign the admin role
+            $roles[] = 'ROLE_ADMIN';
+        } else {
+            // Assign the user role
+            $roles[] = 'ROLE_USER';
+        }
 
         return array_unique($roles);
     }
@@ -78,6 +84,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->roles = $roles;
 
         return $this;
+    }
+
+    public function assignRoleBasedOnEmail(): void
+    {
+        $adminEmail = 'daria@html';
+
+        if ($this->email === $adminEmail) {
+            $this->roles[] = 'ROLE_ADMIN';
+        } else {
+            $this->roles[] = 'ROLE_USER';
+        }
+    }
+    /**
+     * @ORM\PrePersist
+     */
+    public function prePersist(): void
+    {
+        $this->assignRoleBasedOnEmail();
     }
 
     /**

@@ -9,7 +9,7 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <h1>Hello {{ app.user.email }}! ✅</h1>
     <a href="{{ path('calculate_diet_plan') }}" class="btn btn-primary">Calculate Diet Plan</a>
 </div>
 {% endblock %}

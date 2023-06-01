@@ -6,11 +6,6 @@ app_homepage:
     path: /
     controller: App\Controller\MainPageController::index
 
-admin_controller_add:
-    path: /admin/add
-    controller: App\Controller\AdminController::add
-    methods: POST
-
 exercise_index:
     path: /exercise
     controller: App\Controller\ExerciseController::index
@@ -72,3 +67,4 @@ weight_list:
     path: /user/list
     controller: App\Controller\UserController::list
     methods: GET
+

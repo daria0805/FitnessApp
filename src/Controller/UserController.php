@@ -164,4 +164,12 @@ class UserController extends AbstractController
             'dietPlanDatabases' => $dietPlanDatabases,
         ]);
     }
+
+    public function adminOnlyPage(): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        // Render the admin-only page template
+        return $this->render('admin_only_page.html.twig');
+    }
 }
