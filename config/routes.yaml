@@ -42,16 +42,13 @@ profile:
     controller: App\Controller\ProfileController::profile
     methods: GET
 
-# show_diet_plan:
-#     path: /show-diet-plan
-#     controller: App\Controller\ProfileController::showDietPlan
-#     methods: GET
+calculate_diet_plan:
+    path: /user/calculate_diet_plan
+    controller: App\Controller\UserController::calculateDietPlan
+    methods: [GET, POST]
 
-add_weight:
-    path: /profile/add-weight
-    controller: App\Controller\ProfileController::addWeight
-
-calculate_calories:
-    path: /profile/calculate-calories
-    controller: App\Controller\ProfileController::calculateCalories
+add_to_database:
+    path: /user/add_to_database
+    controller: App\Controller\UserController::addToDatabase
+    methods: [GET, POST]
     

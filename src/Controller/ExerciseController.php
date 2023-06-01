@@ -7,7 +7,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use App\Form\ExerciseType;
-use App\Form\DeleteFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Exercise;
 

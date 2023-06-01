@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\DietPlanDatabase;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -23,6 +24,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     private array $roles = [];
+
+    #[ORM\OneToOne(targetEntity: DietPlanDatabase::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private $dietPlanDatabase;
 
     /**
      * @var string The hashed password
@@ -87,6 +91,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPassword(string $password): self
     {
         $this->password = $password;
+
+        return $this;
+    }
+
+    public function getDietPlanDatabase(): ?DietPlanDatabase
+    {
+        return $this->dietPlanDatabase;
+    }
+
+    public function setDietPlanDatabase(?DietPlanDatabase $dietPlanDatabase): self
+    {
+        $this->dietPlanDatabase = $dietPlanDatabase;
 
         return $this;
     }
