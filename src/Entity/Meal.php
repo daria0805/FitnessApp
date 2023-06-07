@@ -22,16 +22,16 @@ class Meal
     #[ORM\Column]
     private ?int $calories = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'decimal', precision: 8, scale: 2)]
     private ?int $grams = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'decimal', precision: 8, scale: 2)]
     private ?int $carbs = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'decimal', precision: 8, scale: 2)]
     private ?int $fat = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'decimal', precision: 8, scale: 2)]
     private ?int $protein = null;
 
     public function getId(): ?int

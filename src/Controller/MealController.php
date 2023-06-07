@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Repository\MealRepository;
 use App\Entity\Meal;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Form\MealFormType;
 
 class MealController extends AbstractController
 {
@@ -33,35 +34,82 @@ class MealController extends AbstractController
         ]);
     }
 
-    public function add(Request $request, MealRepository $mealRepository)
+    /**
+     * add
+     *
+     * @param  mixed $request
+     * @return void
+     */
+    public function add(Request $request)
     {
-        // Retrieve form data and create a new Meal entity
         $meal = new Meal();
-        // Set the properties of the $meal entity based on form data
+        $form = $this->createForm(MealFormType::class, $meal);
 
-        // Save the new meal to the database
-        $mealRepository->create($meal);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->entityManager;
+            $entityManager->persist($meal);
+            $entityManager->flush();
 
-        return $this->redirectToRoute('meal_index');
+            return $this->redirectToRoute('meal_list');
+        }
+
+        return $this->render('meal/add.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 
-    public function edit(Request $request, Meal $meal, MealRepository $mealRepository)
+    /**
+     * edit
+     *
+     * @param  mixed $request
+     * @param  mixed $meal
+     * @return void
+     */
+    public function edit(Request $request, Meal $meal)
     {
-        // Update the properties of the $meal entity based on form data
+        $form = $this->createForm(MealFormType::class, $meal);
+        $form->handleRequest($request);
 
-        // Save the updated meal to the database
-        $mealRepository->update($meal);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->entityManager;
+            $entityManager->flush();
 
-        return $this->redirectToRoute('meal_index');
+            return $this->redirectToRoute('meal_list', ['id' => $meal->getId()]);
+        }
+
+        return $this->render('meal/edit.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 
-    public function delete(Request $request, Meal $meal, MealRepository $mealRepository)
+    /**
+     * delete
+     *
+     * @param  mixed $meal
+     * @param  mixed $id
+     * @return void
+     */
+    public function delete(Meal $meal, int $id)
     {
-        // Delete the meal from the database
-        $mealRepository->delete($meal);
-
-        return $this->redirectToRoute('meal_index');
+        $entityManager = $this->entityManager;
+        $meal = $entityManager->getRepository(Meal::class)->find($id);
+        if (!$meal) {
+            throw $this->createNotFoundException('Meal not found');
+        }
+        $entityManager->remove($meal);
+        $entityManager->flush();
+        return $this->redirectToRoute('meal_list');
+        return $this->render('delete.html.twig', [
+            'meal' => $meal,
+        ]);
     }
+
+    /**
+     * list
+     *
+     * @return Response
+     */
     public function list(): Response
     {
         $meals = $this->entityManager->getRepository(Meal::class)->findAll();

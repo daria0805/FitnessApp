@@ -7,6 +7,7 @@
             <th>ID</th>
             <th>Name</th>
             <th>Duration</th>
+            <th>Photo</th>
           </tr>
           </thead>
           <tbody>
@@ -16,7 +17,7 @@
         <td>{{ exercise.id }}</td>
         <td>{{ exercise.name }}</td>
         <td>{{ exercise.duration }}</td>
-        <td>{{ exercise.photoLink }}</td>
+        <td>{{ exercise.photo }}</td>
         <td>
             <a href="{{ path('exercise_edit', { 'id': exercise.id }) }}">Edit</a>
             <a href="{{ path('exercise_delete', { 'id': exercise.id }) }}">Delete</a>

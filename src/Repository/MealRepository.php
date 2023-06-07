@@ -38,26 +38,26 @@ class MealRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-// -------------
-    // public function create(Meal $meal): void
-    // {
-    //     $entityManager = $this->getEntityManager();
-    //     $entityManager->persist($meal);
-    //     $entityManager->flush();
-    // }
+// // -------------
+//     public function create(Meal $meal): void
+//     {
+//         $entityManager = $this->getEntityManager();
+//         $entityManager->persist($meal);
+//         $entityManager->flush();
+//     }
 
-    // public function update(Meal $meal): void
-    // {
-    //     $entityManager = $this->getEntityManager();
-    //     $entityManager->flush();
-    // }
+//     public function update(Meal $meal): void
+//     {
+//         $entityManager = $this->getEntityManager();
+//         $entityManager->flush();
+//     }
 
-    // public function delete(Meal $meal): void
-    // {
-    //     $entityManager = $this->getEntityManager();
-    //     $entityManager->remove($meal);
-    //     $entityManager->flush();
-    // }
+//     public function delete(Meal $meal): void
+//     {
+//         $entityManager = $this->getEntityManager();
+//         $entityManager->remove($meal);
+//         $entityManager->flush();
+//     }
 
     // public function findAll(): array
     // {

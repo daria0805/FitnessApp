@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Form\ExerciseType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Exercise;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class ExerciseController extends AbstractController
 {
@@ -42,13 +44,26 @@ class ExerciseController extends AbstractController
      * @param  mixed $request
      * @return Response
      */
-    public function add(Request $request): Response
+    public function add(Request $request, SluggerInterface $slugger): Response
     {
         $exercise = new Exercise();
         $form = $this->createForm(ExerciseType::class, $exercise);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $photoFile = $form->get('photo')->getData();
+            if ($photoFile instanceof UploadedFile) {
+                $originalFilename = pathinfo($photoFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '.' . $photoFile->guessClientExtension();
+                $mimeType = $photoFile->getClientMimeType();
+                $photoFile->move(
+                    $this->getParameter('kernel.project_dir') . '/public/images/exercises',
+                    $newFilename
+                );
+
+                $exercise->setPhoto($newFilename, $mimeType);
+            }
             $entityManager = $this->entityManager;
             $entityManager->persist($exercise);
             $entityManager->flush();
@@ -115,6 +130,7 @@ class ExerciseController extends AbstractController
     public function list(): Response
     {
         $exercises = $this->entityManager->getRepository(Exercise::class)->findAll();
+        return $this->redirectToRoute('yoga', ['duration' => $exercises->getDuration()]);
 
         return $this->render('exercise/list.html.twig', [
             'exercises' => $exercises,

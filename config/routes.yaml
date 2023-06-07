@@ -5,7 +5,7 @@ controllers:
 app_homepage:
     path: /
     controller: App\Controller\MainPageController::index
-
+#-----------EXERCISE--------
 exercise_index:
     path: /exercise
     controller: App\Controller\ExerciseController::index
@@ -35,7 +35,7 @@ exercise_list:
     controller: App\Controller\ExerciseController::list
     methods: GET
 
-
+#---------DIET PLAN--------
 profile:
     path: /profile
     controller: App\Controller\ProfileController::profile
@@ -96,3 +96,11 @@ meal_list:
     path: /meal/list
     controller: App\Controller\MealController::list
     methods: GET
+
+# ------------------YOGA-----------
+yoga_controller:
+    path: /yoga/{exerciseId}
+    controller: App\Controller\YogaController::index
+    methods: GET
+    requirements:
+        exerciseId: \d+

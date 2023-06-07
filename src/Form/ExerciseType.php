@@ -14,10 +14,9 @@ class ExerciseType extends AbstractType
     {
         $builder
             ->add('name')
+            ->add('type')
             ->add('duration')
-            ->add('photoLink', null, [
-                'required' => false,
-            ])
+            ->add('description')
             ->add('photo', FileType::class, [
                 'label' => 'Photo',
                 'required' => false,

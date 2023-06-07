@@ -14,18 +14,38 @@ class Exercise
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    private ?string $type = null;
+
+    #[ORM\Column(length: 255)]
     private ?string $name = null;
 
     #[ORM\Column]
     private ?int $duration = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $description = null;
+
     #[ORM\Column(length: 255, nullable:true)]
-    private ?string $photoLink;
+    private ?string $photo;
+
+    #[ORM\Column(length: 255, nullable:true)]
+    private ?string $photoMimeType;
 
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(?string $type): self
+    {
+        $this->type = $type;
+
+        return $this;
     }
 
     public function getName(): ?string
@@ -51,15 +71,31 @@ class Exercise
 
         return $this;
     }
-    public function getPhotoLink(): ?string
+    public function getDescription(): ?string
     {
-        return $this->photoLink;
+        return $this->description;
     }
 
-    public function setPhotoLink(?string $photoLink): self
+    public function setDescription(string $description): self
     {
-        $this->photoLink = $photoLink;
+        $this->description = $description;
 
         return $this;
+    }
+    public function getPhoto(): ?string
+    {
+        return $this->photo ? 'images/exercises/' . $this->photo : null;
+    }
+
+    public function setPhoto(?string $photo, ?string $photoMimeType): self
+    {
+        $this->photo = $photo;
+        $this->photoMimeType = $photoMimeType;
+
+        return $this;
+    }
+    public function getPhotoMimeType(): ?string
+    {
+        return $this->photoMimeType;
     }
 }

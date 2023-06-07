@@ -17,4 +17,74 @@
         <li>Your template at <code><a href="{{ 'D:/AN_4/licenta/fitnessapp/FitnessApp/templates/exercise/index.html.twig'|file_link(0) }}">templates/exercise/index.html.twig</a></code></li>
     </ul>
 </div>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your GIF Example</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var exercises = {{ exercises|json_encode() }};
+            var currentIndex = 0;
+
+            function showExercise(index) {
+                if (index >= exercises.length) {
+                    // Workout completed, show completion message
+                    $('#exercise-details').html('<h2>Workout Complete!</h2>');
+                    return;
+                }
+
+                var exercise = exercises[index];
+
+                // Display exercise details
+                $('#exercise-title').text(exercise.name);
+                $('#exercise-duration').text(exercise.duration);
+                $('#exercise-description').text(exercise.description);
+                $('#exercise-photo').attr('src', exercise.photo);
+
+                // Start the timer for the exercise duration
+                startTimer(exercise.duration, function () {
+                    // Timer finished, show next exercise
+                    showExercise(index + 1);
+                });
+            }
+
+            function startTimer(duration, callback) {
+                var timer = duration, minutes, seconds;
+                var interval = setInterval(function () {
+                    minutes = Math.floor(timer / 60);
+                    seconds = Math.floor(timer % 60);
+
+                    minutes = minutes < 10 ? "0" + minutes : minutes;
+                    seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                    $('#timer').text(minutes + ":" + seconds);
+
+                    if (--timer < 0) {
+                        clearInterval(interval);
+                        callback();
+                    }
+                }, 1000);
+            }
+
+            // Start the workout
+            showExercise(currentIndex);
+        });
+    </script>
+</head>
+<body>
+<div id="exercise-details">
+ <h1>{{ exercise.name }}</h1>
+    <p>{{ exercise.duration }}</p>
+    <p>{{ exercise.description }}</p>
+    {% if exercise.photo %}
+        <img src="{{ asset('images/exercises/' ~ exercise.photo) }}" alt="Exercise Photo">
+    {% endif %}
+    </div>
+    <div id="timer">00:00</div>
+    {# <img src="{{ asset('images/yoga/DownwardFacingDog.gif') }}" alt="Your GIF"> #}
+</body>
+</html>
+
 {% endblock %}
