@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\MealRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MealRepository::class)]
@@ -33,6 +35,14 @@ class Meal
 
     #[ORM\Column(type: 'decimal', precision: 8, scale: 2)]
     private ?int $protein = null;
+
+    #[ORM\OneToMany(mappedBy: 'meal', targetEntity: UserFood::class)]
+    private Collection $addUserFood;
+
+    public function __construct()
+    {
+        $this->addUserFood = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -119,6 +129,36 @@ class Meal
     public function setProtein(int $protein): self
     {
         $this->protein = $protein;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserFood>
+     */
+    public function getAddUserFood(): Collection
+    {
+        return $this->addUserFood;
+    }
+
+    public function addAddUserFood(UserFood $addUserFood): self
+    {
+        if (!$this->addUserFood->contains($addUserFood)) {
+            $this->addUserFood->add($addUserFood);
+            $addUserFood->setMeal($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAddUserFood(UserFood $addUserFood): self
+    {
+        if ($this->addUserFood->removeElement($addUserFood)) {
+            // set the owning side to null (unless already changed)
+            if ($addUserFood->getMeal() === $this) {
+                $addUserFood->setMeal(null);
+            }
+        }
 
         return $this;
     }

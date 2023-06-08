@@ -104,3 +104,18 @@ yoga_controller:
     methods: GET
     requirements:
         exerciseId: \d+
+# ------------------USER MEAL FOOD-----------
+
+# user_meal_add_food:
+#     path: /meal/add-food
+#     controller: App\Controller\MealController::addUserFood
+
+# user_meal_search_food:
+#     path: /meal/search-food
+#     controller: App\Controller\MealController::searchUserFood
+user_food_add:
+    path: /user-food/add
+    controller: App\Controller\UserFoodController::add
+user_food_search:
+    path: /meal/search
+    controller: App\Controller\MealController::search

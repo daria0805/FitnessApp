@@ -29,8 +29,15 @@ class MealController extends AbstractController
     #[Route('/meal', name: 'app_meal')]
     public function index(): Response
     {
+        // $breakfastItems = $this->entityManager->getRepository(Meal::class)->findBy(['mealType' => 'breakfast']);
+        // $lunchItems = $this->entityManager->getRepository(Meal::class)->findBy(['mealType' => 'lunch']);
+        // $dinnerItems = $this->entityManager->getRepository(Meal::class)->findBy(['mealType' => 'dinner']);
+
         return $this->render('meal/index.html.twig', [
             'controller_name' => 'MealController',
+            // 'breakfastItems' => $breakfastItems,
+            // 'lunchItems' => $lunchItems,
+            // 'dinnerItems' => $dinnerItems
         ]);
     }
 
@@ -51,7 +58,7 @@ class MealController extends AbstractController
             $entityManager->persist($meal);
             $entityManager->flush();
 
-            return $this->redirectToRoute('meal_list');
+            //return $this->redirectToRoute('meal_list');
         }
 
         return $this->render('meal/add.html.twig', [
