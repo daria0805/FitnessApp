@@ -1,0 +1,149 @@
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Diet Plan</h1>
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="meal-container">
+                    <h3>Breakfast <button class="btn btn-primary btn-sm add-meal-button" data-meal-type="breakfast">Add Meal</button></h3>
+                    <div class="input-group mb-3 meal-search">
+                        <input type="text" class="form-control" id="breakfast-search" placeholder="Search...">
+                    </div>
+                    <ul class="list-group meal-list" id="breakfast-list">
+                        {% for meal in breakfastMeals %}
+                            <li class="list-group-item">
+                                <strong>{{ meal.foodName }}</strong> - Grams: {{ meal.grams }}, Calories: {{ meal.calories }}, Carbs: {{ meal.carbs }}, Fat: {{ meal.fat }}, Protein: {{ meal.protein }}
+                                {% for userFood in meal.addUserFood %}
+                                    <li class="list-group-item">{{ userFood.name }}</li>
+                                {% endfor %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <div class="mt-3">
+                        <strong>Total Calories: {{ breakfastCalories }}</strong>
+                    </div>
+                </div>
+                <div class="meal-container">
+                    <h3>Lunch<button class="btn btn-primary btn-sm add-meal-button" data-meal-type="lunch">Add Meal</button></h3>
+                    <div class="input-group mb-3 meal-search">
+                        <input type="text" class="form-control" id="lunch-search" placeholder="Search...">
+                    </div>
+                    <ul class="list-group meal-list" id="lunch-list">
+                        {% for meal in lunchMeals %}
+                            <li class="list-group-item">
+                                <strong>{{ meal.foodName }}</strong> - Grams: {{ meal.grams }}, Calories: {{ meal.calories }}, Carbs: {{ meal.carbs }}, Fat: {{ meal.fat }}, Protein: {{ meal.protein }}
+                                {% for userFood in meal.addUserFood %}
+                                    <li class="list-group-item">{{ userFood.name }}</li>
+                                {% endfor %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <div class="mt-3">
+                        <strong>Total Calories: {{ lunchCalories }}</strong>
+                    </div>
+                </div>
+                <div class="meal-container">
+                    <h3>Dinner<button class="btn btn-primary btn-sm add-meal-button" data-meal-type="dinner">Add Meal</button></h3>
+                    <div class="input-group mb-3 meal-search">
+                        <input type="text" class="form-control" id="dinner-search" placeholder="Search...">
+                    </div>
+                    <ul class="list-group meal-list" id="dinner-list">
+                        {% for meal in dinnerMeals %}
+                            <li class="list-group-item">
+                                <strong>{{ meal.foodName }}</strong> - Grams: {{ meal.grams }}, Calories: {{ meal.calories }}, Carbs: {{ meal.carbs }}, Fat: {{ meal.fat }}, Protein: {{ meal.protein }}
+                                {% for userFood in meal.addUserFood %}
+                                    <li class="list-group-item">{{ userFood.name }}</li>
+                                {% endfor %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <div class="mt-3">
+                        <strong>Total Calories: {{ dinnerCalories }}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.add-meal-button').click(function () {
+                const container = $(this).closest('.meal-container');
+                container.find('.meal-search, .meal-list').toggle();
+            });
+            function populateList(listId, items) {
+                const list = $('#' + listId);
+                list.empty();
+
+                items.forEach(function (item) {
+                    const li = $('<li>').addClass('list-group-item').text(item.name + ' - ' + item.grams + 'g - ' + item.calories + 'kcal - ' + item.carbs + 'g - ' + item.fat + 'g - ' + item.protein + 'g');
+
+                    const addButton = $('<button>').addClass('btn btn-primary btn-sm ml-2').text('Add');
+                    addButton.click(function () {
+                        const mealData = {
+                            name: item.name,
+                            grams: item.grams,
+                            calories: item.calories,
+                            carbs: item.carbs,
+                            fat: item.fat,
+                            protein: item.protein
+                        };
+
+                        $.ajax({
+                            url: '/meal/add',
+                            method: 'POST',
+                            data: mealData,
+                            success: function (response) {
+                                console.log('Meal item added successfully:', response);
+                            },
+                            error: function (error) {
+                                console.error('Error adding meal item:', error);
+                            }
+                        });
+                    });
+
+                    li.append(addButton);
+                    list.append(li);
+                });
+            }
+
+            function filterList(listId, searchTerm) {
+                const list = $('#' + listId + ' li');
+
+                list.each(function () {
+                    const text = $(this).text().toLowerCase();
+                    const shouldShow = text.includes(searchTerm.toLowerCase());
+                    $(this).toggle(shouldShow);
+                });
+            }
+
+            const breakfastData = {{ breakfastMeals|json_encode|raw }};
+            const lunchData = {{ lunchMeals|json_encode|raw }};
+            const dinnerData = {{ dinnerMeals|json_encode|raw }};
+            console.log('Breakfast Data:', breakfastData);
+            console.log('Lunch Data:', lunchData);
+            console.log('Dinner Data:', dinnerData);
+
+            populateList('breakfast-list', breakfastData);
+            populateList('lunch-list', lunchData);
+            populateList('dinner-list', dinnerData);
+
+            $('#breakfast-search').on('input', function () {
+                filterList('breakfast-list', $(this).val());
+            });
+
+            $('#lunch-search').on('input', function () {
+                filterList('lunch-list', $(this).val());
+            });
+
+            $('#dinner-search').on('input', function () {
+                filterList('dinner-list', $(this).val());
+            });
+        });
+    </script>
+{% endblock %}

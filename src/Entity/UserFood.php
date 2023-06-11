@@ -18,7 +18,22 @@ class UserFood
     private ?Meal $meal = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $category = null;
+    private ?string $foodName = null;
+
+    #[ORM\Column]
+    private ?int $calories = null;
+
+    #[ORM\Column(type: 'decimal', precision: 8, scale: 2)]
+    private ?int $grams = null;
+
+    #[ORM\Column(type: 'decimal', precision: 8, scale: 2)]
+    private ?int $carbs = null;
+
+    #[ORM\Column(type: 'decimal', precision: 8, scale: 2)]
+    private ?int $fat = null;
+
+    #[ORM\Column(type: 'decimal', precision: 8, scale: 2)]
+    private ?int $protein = null;
 
     public function getId(): ?int
     {
@@ -37,14 +52,74 @@ class UserFood
         return $this;
     }
 
-    public function getCategory(): ?string
+    public function getFoodName(): ?string
     {
-        return $this->category;
+        return $this->foodName;
     }
 
-    public function setCategory(string $category): self
+    public function setFoodName(string $foodName): self
     {
-        $this->category = $category;
+        $this->foodName = $foodName;
+
+        return $this;
+    }
+
+    public function getCalories(): ?int
+    {
+        return $this->calories;
+    }
+
+    public function setCalories(int $calories): self
+    {
+        $this->calories = $calories;
+
+        return $this;
+    }
+
+    public function getGrams(): ?int
+    {
+        return $this->grams;
+    }
+
+    public function setGrams(int $grams): self
+    {
+        $this->grams = $grams;
+
+        return $this;
+    }
+
+    public function getCarbs(): ?int
+    {
+        return $this->carbs;
+    }
+
+    public function setCarbs(int $carbs): self
+    {
+        $this->carbs = $carbs;
+
+        return $this;
+    }
+
+    public function getFat(): ?int
+    {
+        return $this->fat;
+    }
+
+    public function setFat(int $fat): self
+    {
+        $this->fat = $fat;
+
+        return $this;
+    }
+
+    public function getProtein(): ?int
+    {
+        return $this->protein;
+    }
+
+    public function setProtein(int $protein): self
+    {
+        $this->protein = $protein;
 
         return $this;
     }

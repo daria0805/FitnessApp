@@ -1,7 +1,6 @@
 controllers:
     resource: ../src/Controller/
     type: attribute
-
 app_homepage:
     path: /
     controller: App\Controller\MainPageController::index
@@ -45,6 +44,10 @@ calculate_diet_plan:
     path: /user/calculate_diet_plan
     controller: App\Controller\UserController::calculateDietPlan
     methods: [GET, POST]
+app_meal_plan:
+    path: /user/plan
+    controller: App\Controller\UserController::userFoodPage
+    methods: [GET, POST]
 
 add_to_database:
     path: /user/add_to_database
@@ -53,10 +56,13 @@ add_to_database:
 
 weight_edit:
     path: /user/{id}/edit
-    controller: App\Controller\UserController::edit
     methods: [GET, POST]
     requirements:
         id: '\d+'
+    defaults:
+        _controller: 'App\Controller\UserController::edit'
+        _converters:
+            dietPlan: 'doctrine.orm:App\Entity\DietPlanDatabase(dietPlanDatabase)'
 weight_delete:
     path: /user/{id}/delete
     controller: App\Controller\UserController::delete
@@ -106,6 +112,12 @@ yoga_controller:
         exerciseId: \d+
 # ------------------USER MEAL FOOD-----------
 
+# meal_user_food_add:
+#     path: /meal/add-food/{mealType}/{foodId}
+#     controller: App\Controller\MealController::addUserFood
+# meal_user_food_search:
+#     path: /meal/search/{mealType}
+#     controller: App\Controller\MealController::searchUserFood
 # user_meal_add_food:
 #     path: /meal/add-food
 #     controller: App\Controller\MealController::addUserFood
@@ -113,9 +125,3 @@ yoga_controller:
 # user_meal_search_food:
 #     path: /meal/search-food
 #     controller: App\Controller\MealController::searchUserFood
-user_food_add:
-    path: /user-food/add
-    controller: App\Controller\UserFoodController::add
-user_food_search:
-    path: /meal/search
-    controller: App\Controller\MealController::search

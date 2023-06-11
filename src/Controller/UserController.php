@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Entity\DietPlanDatabase;
 use App\Form\WeightFormType;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Meal;
 
 class UserController extends AbstractController
 {
@@ -47,6 +48,12 @@ class UserController extends AbstractController
     {
         $form = $this->createForm(WeightFormType::class);
         $form->handleRequest($request);
+        $totalCalorieIntake = null;
+        $breakfastCalories = 0;
+        $lunchCalories = 0;
+        $dinnerCalories = 0;
+        $isWeightCalculated = false;
+        $dietPlanDatabase = null;
         if ($form->isSubmitted() && $form->isValid()) {
             $weight = $form->get('weight')->getData();
 
@@ -67,20 +74,26 @@ class UserController extends AbstractController
             $dinnerCalories = $totalCalorieIntake * $dinnerPercentage;
 
             $user = $this->getUser();
-            $dietPlan = new DietPlanDatabase();
-            $dietPlan->setUser($user);
-            $dietPlan->setWeight($weight);
-            $dietPlan->setTotalCalorieIntake($totalCalorieIntake);
-            $dietPlan->setBreakfastCalories($breakfastCalories);
-            $dietPlan->setLunchCalories($lunchCalories);
-            $dietPlan->setDinnerCalories($dinnerCalories);
-
-            $this->entityManager->persist($dietPlan);
+            $dietPlanDatabase = new DietPlanDatabase();
+            $dietPlanDatabase->setUser($user);
+            $dietPlanDatabase->setWeight($weight);
+            $dietPlanDatabase->setTotalCalorieIntake($totalCalorieIntake);
+            $dietPlanDatabase->setBreakfastCalories($breakfastCalories);
+            $dietPlanDatabase->setLunchCalories($lunchCalories);
+            $dietPlanDatabase->setDinnerCalories($dinnerCalories);
+            $this->entityManager->persist($dietPlanDatabase);
             $this->entityManager->flush();
+            $isWeightCalculated = true;
         }
 
         return $this->render('user/calculate_diet_plan.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'isWeightCalculated' => $isWeightCalculated,
+            'totalCalorieIntake' => $totalCalorieIntake,
+            'breakfastCalories' => $breakfastCalories,
+            'lunchCalories' => $lunchCalories,
+            'dinnerCalories' => $dinnerCalories,
+            'dietPlanDatabase' => $dietPlanDatabase,
         ]);
     }
     /**
@@ -90,7 +103,7 @@ class UserController extends AbstractController
      * @param  mixed $dietPlanDatabase
      * @return Response
      */
-    public function edit(Request $request, DietPlanDatabase $dietPlanDatabase): Response
+    public function edit(Request $request, DietPlanDatabase $dietPlanDatabase, int $id): Response
     {
         $form = $this->createForm(WeightFormType::class);
         $form->handleRequest($request);
@@ -127,7 +140,8 @@ class UserController extends AbstractController
         }
 
         return $this->render('user/edit.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'dietPlanDatabase' => $dietPlanDatabase,
         ]);
     }
     /**
@@ -171,5 +185,43 @@ class UserController extends AbstractController
 
         // Render the admin-only page template
         return $this->render('admin_only_page.html.twig');
+    }
+    private function calculateTotalCalories(array $meals): int
+    {
+        $totalCalories = 0;
+
+        foreach ($meals as $meal) {
+            $totalCalories += $meal->getCalories();
+        }
+
+        return $totalCalories;
+    }
+    /**
+     * userFoodPage
+     *
+     * @return Response
+     */
+    public function userFoodPage(): Response
+    {
+        $mealRepository = $this->entityManager->getRepository(Meal::class);
+
+        // Filter meals by foodTime
+        $breakfastMeals = $mealRepository->findBy(['foodTime' => 'breakfast']);
+        $lunchMeals = $mealRepository->findBy(['foodTime' => 'lunch']);
+        $dinnerMeals = $mealRepository->findBy(['foodTime' => 'dinner']);
+
+        // Calculate total calories for each meal
+        $breakfastCalories = $this->calculateTotalCalories($breakfastMeals);
+        $lunchCalories = $this->calculateTotalCalories($lunchMeals);
+        $dinnerCalories = $this->calculateTotalCalories($dinnerMeals);
+
+        return $this->render('user/plan.html.twig', [
+            'breakfastMeals' => $breakfastMeals,
+            'lunchMeals' => $lunchMeals,
+            'dinnerMeals' => $dinnerMeals,
+            'breakfastCalories' => $breakfastCalories,
+            'lunchCalories' => $lunchCalories,
+            'dinnerCalories' => $dinnerCalories,
+        ]);
     }
 }

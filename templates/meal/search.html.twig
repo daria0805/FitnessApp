@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<h2>Search Results for "{{ searchTerm }}" - {{ mealType }}</h2>
+
+<ul>
+    {% for result in results %}
+        <li>
+            {{ result.food_name }} - {{ result.calories }} calories
+            <a href="{{ path('meal_user_food_add', { 'mealType': mealType, 'foodId': result.id }) }}">Add</a>
+        </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

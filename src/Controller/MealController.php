@@ -10,6 +10,7 @@ use App\Repository\MealRepository;
 use App\Entity\Meal;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\MealFormType;
+use App\Entity\UserFood;
 
 class MealController extends AbstractController
 {
@@ -29,15 +30,8 @@ class MealController extends AbstractController
     #[Route('/meal', name: 'app_meal')]
     public function index(): Response
     {
-        // $breakfastItems = $this->entityManager->getRepository(Meal::class)->findBy(['mealType' => 'breakfast']);
-        // $lunchItems = $this->entityManager->getRepository(Meal::class)->findBy(['mealType' => 'lunch']);
-        // $dinnerItems = $this->entityManager->getRepository(Meal::class)->findBy(['mealType' => 'dinner']);
-
         return $this->render('meal/index.html.twig', [
-            'controller_name' => 'MealController',
-            // 'breakfastItems' => $breakfastItems,
-            // 'lunchItems' => $lunchItems,
-            // 'dinnerItems' => $dinnerItems
+            'controller_name' => 'MealController'
         ]);
     }
 
@@ -58,7 +52,7 @@ class MealController extends AbstractController
             $entityManager->persist($meal);
             $entityManager->flush();
 
-            //return $this->redirectToRoute('meal_list');
+            return $this->redirectToRoute('meal_list');
         }
 
         return $this->render('meal/add.html.twig', [
@@ -125,4 +119,55 @@ class MealController extends AbstractController
             'meals' => $meals,
         ]);
     }
+
+    // public function searchUserFood(Request $request, $mealType)
+    // {
+    //     $results = $this->entityManager;
+    //     $searchTerm = $request->query->get('search');
+
+    //     // Retrieve meals matching the search term and meal type from the meal database
+    //     $mealRepository = $this->entityManager->getRepository(Meal::class);
+    //     $results = $mealRepository->createQueryBuilder('m')
+    //         ->where('m.food_name LIKE :searchTerm')
+    //         ->andWhere('m.food_time = :mealType')
+    //         ->setParameter('searchTerm', '%' . $searchTerm . '%')
+    //         ->setParameter('mealType', $mealType)
+    //         ->getQuery()
+    //         ->getResult();
+
+    //     return $this->render('meal/search.html.twig', [
+    //         'searchTerm' => $searchTerm,
+    //         'mealType' => $mealType,
+    //         'results' => $results,
+    //     ]);
+    // }
+
+    // public function addUserFood(int $mealType, int $foodId)
+    // {
+    //     $entityManager = $this->entityManager;
+    //     $mealRepository = $this->entityManager->getRepository(Meal::class);
+    //     $selectedFood = $mealRepository->find($foodId);
+
+    //     // Retrieve the selected food from the meal database using $foodId
+    //     $mealRepository = $entityManager->getRepository(Meal::class);
+    //     $selectedFood = $mealRepository->find($foodId);
+
+    //     // Create a new UserFood entity
+    //     $userFood = new UserFood();
+    //     $userFood->setFoodName($selectedFood->getFoodName());
+    //     $userFood->setGrams($selectedFood->getGrams());
+    //     $userFood->setCalories($selectedFood->getCalories());
+    //     $userFood->setCarbs($selectedFood->getCarbs());
+    //     $userFood->setProtein($selectedFood->getProtein());
+    //     $userFood->setFat($selectedFood->getFat());
+
+    //     $user = $this->getUser();
+    //     $user->addAddUserFood($userFood);
+
+    //     // Persist the UserFood entity to the user's food database
+    //     $entityManager->persist($userFood);
+    //     $entityManager->flush();
+
+    //     return $this->redirectToRoute('diet_plan');
+    // }
 }

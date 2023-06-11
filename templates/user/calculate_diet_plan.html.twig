@@ -7,17 +7,17 @@
 <form method="POST" action="{{ path('calculate_diet_plan') }}">
     {{ form_start(form) }}
         {{ form_row(form.weight) }}
-        <button type="submit" name="calories">Calculate</button>
+         <button type="submit" name="calories" {% if totalCalorieIntake is defined %}disabled{% endif %}>
+            {% if totalCalorieIntake is defined %}Edit{% else %}Calculate{% endif %}
+        </button>
     {{ form_end(form) }}
 </form>
-
 
 {% if totalCalorieIntake is defined %}
     <h2>Total Calories: {{ totalCalorieIntake }}</h2>
     <h3>Breakfast Calories: {{ breakfastCalories }}</h3>
     <h3>Lunch Calories: {{ lunchCalories }}</h3>
     <h3>Dinner Calories: {{ dinnerCalories }}</h3>
-
-    {# <a href="{{ path('/user/begin_diet_plan') }}" class="btn btn-primary">Begin Diet Plan</a> #}
+          <a href="{{ path('app_meal_plan') }}" class="btn btn-primary">Go to Plan</a>
 {% endif %}
 {% endblock %}
