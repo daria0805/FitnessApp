@@ -17,8 +17,14 @@ class UserFood
     #[ORM\JoinColumn(nullable: false)]
     private ?Meal $meal = null;
 
+    #[ORM\ManyToOne(inversedBy: 'userFoods')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
     #[ORM\Column(length: 255)]
     private ?string $foodName = null;
+    #[ORM\Column(length: 255)]
+    private ?string $foodTime = null;
 
     #[ORM\Column]
     private ?int $calories = null;
@@ -44,6 +50,16 @@ class UserFood
     {
         return $this->meal;
     }
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+        return $this;
+    }
 
     public function setMeal(?Meal $meal): self
     {
@@ -60,6 +76,18 @@ class UserFood
     public function setFoodName(string $foodName): self
     {
         $this->foodName = $foodName;
+
+        return $this;
+    }
+
+    public function getFoodTime(): ?string
+    {
+        return $this->foodTime;
+    }
+
+    public function setFoodTime(string $foodTime): self
+    {
+        $this->foodTime = $foodTime;
 
         return $this;
     }

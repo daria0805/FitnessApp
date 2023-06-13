@@ -13,28 +13,28 @@ class Meal
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    public ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $foodTime = null;
+    public ?string $foodTime = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $foodName = null;
+    public ?string $foodName = null;
 
     #[ORM\Column]
-    private ?int $calories = null;
+    public ?int $calories = null;
 
     #[ORM\Column(type: 'decimal', precision: 8, scale: 2)]
-    private ?int $grams = null;
+    public ?int $grams = null;
 
     #[ORM\Column(type: 'decimal', precision: 8, scale: 2)]
-    private ?int $carbs = null;
+    public ?int $carbs = null;
 
     #[ORM\Column(type: 'decimal', precision: 8, scale: 2)]
-    private ?int $fat = null;
+    public ?int $fat = null;
 
     #[ORM\Column(type: 'decimal', precision: 8, scale: 2)]
-    private ?int $protein = null;
+    public ?int $protein = null;
 
     #[ORM\OneToMany(mappedBy: 'meal', targetEntity: UserFood::class)]
     private Collection $addUserFood;

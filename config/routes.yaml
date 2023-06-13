@@ -111,17 +111,7 @@ yoga_controller:
     requirements:
         exerciseId: \d+
 # ------------------USER MEAL FOOD-----------
-
-# meal_user_food_add:
-#     path: /meal/add-food/{mealType}/{foodId}
-#     controller: App\Controller\MealController::addUserFood
-# meal_user_food_search:
-#     path: /meal/search/{mealType}
-#     controller: App\Controller\MealController::searchUserFood
-# user_meal_add_food:
-#     path: /meal/add-food
-#     controller: App\Controller\MealController::addUserFood
-
-# user_meal_search_food:
-#     path: /meal/search-food
-#     controller: App\Controller\MealController::searchUserFood
+add_meal_to_user_food:
+  path: /add-meal-to-user-food
+  controller: App\Controller\UserController::addMealToUserFood
+  methods: [POST]

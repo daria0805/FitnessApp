@@ -10,6 +10,9 @@ use App\Entity\DietPlanDatabase;
 use App\Form\WeightFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Meal;
+use App\Entity\UserFood;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Core\Security;
 
 class UserController extends AbstractController
 {
@@ -57,18 +60,15 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $weight = $form->get('weight')->getData();
 
-            //calculate total calories
             $activityFactor = 1.2;
             $bmr = 370 + (21.6 * ($weight - (0.23 * $weight)));
             $totalCalorieIntake = $bmr * $activityFactor;
             $totalCalorieIntake = round($totalCalorieIntake);
 
-            // Define the percentage distribution for each meal
             $breakfastPercentage = 0.3; // 30%
             $lunchPercentage = 0.4; // 40%
             $dinnerPercentage = 0.3; // 30%
 
-            // Calculate the calories for each meal based on the percentage distribution
             $breakfastCalories = $totalCalorieIntake * $breakfastPercentage;
             $lunchCalories = $totalCalorieIntake * $lunchPercentage;
             $dinnerCalories = $totalCalorieIntake * $dinnerPercentage;
@@ -110,30 +110,25 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $newWeight  = $form->get('weight')->getData();
 
-            //calculate total calories
             $activityFactor = 1.2;
             $bmr = 370 + (21.6 * ($newWeight  - (0.23 * $newWeight )));
             $newtotalCalorieIntake = $bmr * $activityFactor;
             $newtotalCalorieIntake = round($newtotalCalorieIntake);
 
-            // Define the percentage distribution for each meal
             $breakfastPercentage = 0.3; // 30%
             $lunchPercentage = 0.4; // 40%
             $dinnerPercentage = 0.3; // 30%
 
-            // Calculate the calories for each meal based on the percentage distribution
             $newbreakfastCalories = $newtotalCalorieIntake * $breakfastPercentage;
             $newlunchCalories = $newtotalCalorieIntake * $lunchPercentage;
             $newdinnerCalories = $newtotalCalorieIntake * $dinnerPercentage;
 
-            //update the values in the database
             $dietPlanDatabase->setWeight($newWeight);
             $dietPlanDatabase->setTotalCalorieIntake($newtotalCalorieIntake);
             $dietPlanDatabase->setBreakfastCalories($newbreakfastCalories);
             $dietPlanDatabase->setLunchCalories($newlunchCalories);
             $dietPlanDatabase->setDinnerCalories($newdinnerCalories);
 
-            //persist into database
             $this->entityManager->persist($dietPlanDatabase);
             $this->entityManager->flush();
             return $this->redirectToRoute('weight_list', ['id' => $dietPlanDatabase->getId()]);
@@ -183,7 +178,6 @@ class UserController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        // Render the admin-only page template
         return $this->render('admin_only_page.html.twig');
     }
     private function calculateTotalCalories(array $meals): int
@@ -205,12 +199,10 @@ class UserController extends AbstractController
     {
         $mealRepository = $this->entityManager->getRepository(Meal::class);
 
-        // Filter meals by foodTime
         $breakfastMeals = $mealRepository->findBy(['foodTime' => 'breakfast']);
         $lunchMeals = $mealRepository->findBy(['foodTime' => 'lunch']);
         $dinnerMeals = $mealRepository->findBy(['foodTime' => 'dinner']);
 
-        // Calculate total calories for each meal
         $breakfastCalories = $this->calculateTotalCalories($breakfastMeals);
         $lunchCalories = $this->calculateTotalCalories($lunchMeals);
         $dinnerCalories = $this->calculateTotalCalories($dinnerMeals);
@@ -223,5 +215,33 @@ class UserController extends AbstractController
             'lunchCalories' => $lunchCalories,
             'dinnerCalories' => $dinnerCalories,
         ]);
+    }
+    public function addMealToUserFood(Request $request, Security $security): JsonResponse
+    {
+        $user = $security->getUser();
+        $mealId = $request->request->get('mealId');
+
+        $entityManager = $this->entityManager;
+        $mealRepository = $entityManager->getRepository(Meal::class);
+        $meal = $mealRepository->find($mealId);
+
+        if (!$meal) {
+            throw $this->createNotFoundException('Meal not found.');
+        }
+        $userFood = new UserFood();
+        $userFood->setMeal($meal);
+        $userFood->setFoodName($meal->getFoodName());
+        $userFood->setFoodTime($meal->getFoodTime());
+        $userFood->setCalories($meal->getCalories());
+        $userFood->setGrams($meal->getGrams());
+        $userFood->setCarbs($meal->getCarbs());
+        $userFood->setFat($meal->getFat());
+        $userFood->setProtein($meal->getProtein());
+        $userFood->setUser($user);
+
+        $entityManager->persist($userFood);
+        $entityManager->flush();
+
+        return new JsonResponse(['success' => true]);
     }
 }
