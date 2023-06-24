@@ -13,6 +13,9 @@ use App\Entity\Meal;
 use App\Entity\UserFood;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\VarDumper\VarDumper;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class UserController extends AbstractController
 {
@@ -244,4 +247,53 @@ class UserController extends AbstractController
 
         return new JsonResponse(['success' => true]);
     }
+    /**
+     * mealChart
+     *
+     * @return Response
+     */
+    public function mealChart(): Response
+    {
+        // Retrieve meal data from the database
+        $userFood  = $this->entityManager->getRepository(UserFood::class)->findAll();
+        return $this->json($userFood);
+        // return $this->render('user/chart.html.twig', [
+        //     'userFoodData' => $userFoodData,
+        // ]);
+    }
+    // public function prepareData(): Response
+    // {
+    //     // Fetch and process data from the database
+    //     $userFoodData = $this->entityManager->getRepository(MyEntity::class)->findAll();
+
+    //     // Prepare the data for chart rendering
+    //     $chartData = [
+    //         'labels' => [],
+    //         'data' => [],
+    //     ];
+
+    //     foreach ($userFoodData as $item) {
+    //         $chartData['labels'][] = $item->getName();
+    //         $chartData['data'][] = $item->getValue();
+    //     }
+
+    //     // Return a JSON response with the prepared chart data
+    //     return new JsonResponse($chartData);
+    //     return $this->render('user/chart.html.twig', [
+    //         'chartData' => $chartData,
+    //     ]);
+    // }
+    // public function serializeEntity(SerializerInterface $serializer): Response
+    // {
+    //     // Fetch your entity from the database
+    //     $userFoodData = $this->entityManager->getRepository(MyEntity::class)->findAll();
+
+    //     // Serialize the entity while ignoring circular references
+    //     $serializedData = $serializer->serialize($userFoodData, 'json', ['circular_reference_handler' => function ($object) {
+    //         return $object->getId();
+    //     }]);
+
+    //     // Return the serialized data as a response
+    //     return new Response($serializedData);
+    // }
 }

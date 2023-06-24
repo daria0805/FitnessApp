@@ -130,8 +130,6 @@ class ExerciseController extends AbstractController
     public function list(): Response
     {
         $exercises = $this->entityManager->getRepository(Exercise::class)->findAll();
-        //return $this->redirectToRoute('yoga', ['duration' => $exercises->getDuration()]);
-
         return $this->render('exercise/list.html.twig', [
             'exercises' => $exercises,
         ]);

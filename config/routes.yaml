@@ -105,13 +105,24 @@ meal_list:
 
 # ------------------YOGA-----------
 yoga_controller:
-    path: /yoga/{exerciseId}
+    path: /yoga
     controller: App\Controller\YogaController::index
     methods: GET
     requirements:
         exerciseId: \d+
+yoga_start:
+    path: /start
+    controller: App\Controller\YogaController::startWorkout
+    methods: GET
+exit_workout:
+    path: /exit-workout
+    controller: App\Controller\YogaController::exitWorkout
 # ------------------USER MEAL FOOD-----------
 add_meal_to_user_food:
   path: /add-meal-to-user-food
   controller: App\Controller\UserController::addMealToUserFood
   methods: [POST]
+meal_chart:
+  path: /user/chart
+  controller: App\Controller\UserController::mealChart
+  methods: [GET]

@@ -13,7 +13,7 @@ class DietPlanDatabase
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\OneToOne(targetEntity: User::class)]
+    #[ORM\OneToOne(targetEntity: User::class, inversedBy : "dietPlanDatabase")]
     #[ORM\JoinColumn(name: "user_id", referencedColumnName: "id", nullable: false)]
     private $user;
 

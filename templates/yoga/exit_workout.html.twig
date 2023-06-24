@@ -1,0 +1,86 @@
+{# {% extends 'base.html.twig' %}
+
+{% block title %}Well Done!{% endblock %}
+
+{% block body %}
+    <div class="well-done-wrapper">
+        <h1>Well done!</h1>
+        <p>You have completed {{ completedExerciseIds|length }} out of {{ totalExercises }} exercises:</p>
+        
+        <ul>
+            {% for exerciseId in completedExerciseIds %}
+                <li>{{ exerciseId }} <span class="checkmark">✓</span></li>
+            {% endfor %}
+            {% for exerciseId in 1..totalExercises if exerciseId not in completedExerciseIds %}
+                <li>{{ exerciseId }} <span class="crossmark">✗</span></li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
+{% block body %}
+    <h1>Well done!</h1>
+    <p>You have successfully completed the workout.</p>
+{% endblock %} #}
+{# {% extends 'base.html.twig' %}
+
+{% block title %}Well Done!{% endblock %}
+
+        {% set completedExerciseIds = [] %}
+        {% for key, exercise in exercises %}
+            {% if key < currentExercise %}
+                {% set _ = completedExerciseIds|merge([key + 1]) %}
+            {% endif %}
+        {% endfor %}
+{% block body %}
+    <div class="well-done-wrapper">
+        <h1>Well done!</h1>
+        <p>You have completed {{ completedExerciseIds|length }} out of {{ totalExercises }} exercises:</p>
+        
+        <ul>
+            {% for exerciseId in completedExerciseIds %}
+                <li>{{ exerciseId }} <span class="checkmark">✓</span></li>
+            {% endfor %}
+            {% set remainingExercises = range(1, totalExercises)|filter(item => item not in completedExerciseIds) %}
+            {% for exerciseId in remainingExercises %}
+                <li>{{ exerciseId }} <span class="crossmark">✗</span></li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %} #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Well Done!{% endblock %}
+
+{% set completedExerciseIds = [] %}
+{% for key, exercise in exercises %}
+    {% if key < currentExercise %}
+        {% set _ = completedExerciseIds|merge([key + 1]) %}
+    {% endif %}
+{% endfor %}
+
+{% block body %}
+    <div class="well-done-wrapper">
+        <h1>Well done!</h1>
+        <p>You have completed {{ completedExerciseIds|length }} out of {{ totalExercises }} exercises:</p>
+        
+        <ul>
+            {# {% for exerciseId in completedExerciseIds %}
+                <li>{{ exerciseId }} <span class="checkmark">✓</span></li>
+            {% endfor %}
+            
+            {% for exerciseId in 1..totalExercises %}
+                {% if exerciseId not in completedExerciseIds %}
+                    <li>{{ exerciseId }} <span class="crossmark">✗</span></li>
+                {% endif %}
+            {% endfor %} #}
+             {% for exerciseId in range(1, totalExercises) %}
+                {% if exerciseId in completedExerciseIds %}
+                    <li>{{ exerciseId }} <span class="checkmark">✓</span></li>
+                {% else %}
+                    <li>{{ exerciseId }} <span class="crossmark">✗</span></li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
+

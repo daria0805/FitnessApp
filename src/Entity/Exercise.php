@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ExerciseRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Intervention\Image\ImageManagerStatic as ImageManager;
 
 #[ORM\Entity(repositoryClass: ExerciseRepository::class)]
 class Exercise
@@ -91,11 +92,29 @@ class Exercise
     {
         $this->photo = $photo;
         $this->photoMimeType = $photoMimeType;
+        if ($photo) {
+            $this->resizePhoto();
+        }
 
         return $this;
     }
     public function getPhotoMimeType(): ?string
     {
         return $this->photoMimeType;
+    }
+    private function resizePhoto(): void
+    {
+        $photoPath = 'images/exercises/' . $this->photo;
+        $resizedPhotoPath = 'images/exercises/' . $this->photo;
+
+        // Define the desired width and height for the resized image
+        $desiredWidth = 800;
+        $desiredHeight = 600;
+
+        // Resize the image using Intervention Image library
+        $resizedImage = ImageManager::make($photoPath)->fit($desiredWidth, $desiredHeight);
+
+        // Save the resized image to the specified path
+        $resizedImage->save($resizedPhotoPath);
     }
 }

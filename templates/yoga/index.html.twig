@@ -2,6 +2,7 @@
 
 {% block title %}Hello YogaController!{% endblock %}
 
+
 {% block body %}
 <style>
     .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
@@ -11,124 +12,87 @@
 
 <div class="example-wrapper">
     <h1>Hello {{ app.user.email }}! ✅</h1>
-     <h1>Yoga Exercises</h1>
+    <h1>Yoga Exercises</h1>
+
+    <button id="pauseButton" onclick="pauseWorkout()" class="btn btn-primary">Pause Workout</button>
+    <button id="resumeButton" onclick="resumeWorkout()" class="btn btn-primary" style="display: none;" data-durations="{{ durations|json_encode() }}">{{ 'Resume Workout' }}</button>
+
+    <a href="{{ path('exit_workout') }}" class="btn btn-danger">Exit Workout</a>
 
 
-<button id="startButton" onclick="startWorkout()">Start Workout</button>
-<button id="pauseButton" onclick="pauseWorkout()" style="display: none;">Pause Workout</button>
-<button id="resumeButton" onclick="resumeWorkout()" style="display: none;">Resume Workout</button>
-
-{% for key, exercise in exercises %}
-<div id="exercise{{ key }}" class="exercise" {% if key != 0 %}style="display: none;"{% endif %}>
-    <h2>{{ exercise.getName() }}</h2>
-    <p>{{ exercise.getDescription() }}</p>
-    <img src="{{ asset(exercisePhotos[key]) }}" alt="Exercise Photo">
-    <div id="timer{{ key }}" class="timer"></div>
-    {# <script>console.log("Exercise {{ key }} rendered.");</script> #}
-</div>
-{% endfor %}
-{# {{ dump(exercisePhotos) }} #}
-<div id="message" style="display: none;">All exercises completed!</div>
-
-
-<script>
-//-----------------TIMER---------
-    // Start the timers
-    {% for key, duration in durations %}
-        setTimeout(function() {
-            startTimer({{ key }}, {{ durations[key] }});
-        }, {{ key > 0 ? durations[key - 1] * 1000 : 0 }});
+    {% for key, exercise in exercises %}
+        <div id="exercise{{ key }}" class="exercise" {% if key != 0 %}style="display: none;"{% endif %}>
+            <h2>{{ exercise.getName() }}</h2>
+            <p>{{ exercise.getDescription() }}</p>
+            <img src="{{ asset(exercisePhotos[key]) }}" alt="Exercise Photo">
+            <div id="timer{{ key }}" class="timer"></div>
+        </div>
     {% endfor %}
 
+    <div id="message" style="display: none;">All exercises completed!</div>
 
-    var totalExercises = {{ exercises|length }};
-    
-    // Initialize the current exercise index
-    var currentExercise = 0;
+    <script>
+        var totalExercises = {{ exercises|length }};
+        var currentExercise = 0;
+        var pauseButton = document.getElementById("pauseButton");
+        var resumeButton = document.getElementById("resumeButton");
+        var workoutStarted = false;
+        var workoutPaused = false;
+        var durations = JSON.parse(document.getElementById("resumeButton").getAttribute("data-durations"));
+        var timerInterval;
+        var remainingTime = 0;
 
-    var startButton = document.getElementById("startButton");
-    var pauseButton = document.getElementById("pauseButton");
-    var resumeButton = document.getElementById("resumeButton");
+        startTimer(currentExercise, durations[currentExercise]);
 
-    var interval;
-    var workoutStarted = false;
-    var workoutPaused = false;
-    
-    // Start the timer for the first exercise
-    startTimer(currentExercise, durations[currentExercise]);
+        function startTimer(key, duration) {
+            var timer = document.getElementById("timer" + key);
+            var seconds = duration - remainingTime; // Use remaining time
+            timerInterval = setInterval(function() {
+                timer.innerHTML = seconds;
+                seconds--;
 
-    // Start the workout when the start button is clicked
-    function startWorkout() {
-        if (!workoutStarted) {
-            // Hide the start button and show the pause button
-            startButton.style.display = "none";
-            pauseButton.style.display = "inline-block";
-            
-            // Start the timer for the first exercise
-            startTimer(currentExercise, durations[currentExercise]);
-            
-            workoutStarted = true;
+                if (seconds < 0) {
+                    clearInterval(timerInterval);
+                    timer.innerHTML = "Timer ended";
+                    document.getElementById("exercise" + key).style.display = "none";
+                    currentExercise++;
+
+                    if (currentExercise < totalExercises) {
+                        document.getElementById("exercise" + currentExercise).style.display = "block";
+
+                        if (!workoutPaused) {
+                            remainingTime = 0; // Reset remaining time
+                            startTimer(currentExercise, durations[currentExercise]);
+                        }
+                    } else {
+                        document.getElementById("message").style.display = "block";
+                        pauseButton.style.display = "none";
+                        resumeButton.style.display = "none";
+                    }
+                }
+            }, 1000);
         }
-    }
-    
-    // Pause the workout when the pause button is clicked
-    function pauseWorkout() {
-        if (interval && !workoutPaused) {
-            clearInterval(interval);
-            interval = null;
+
+        function pauseWorkout() {
+            console.log("Pause button clicked");
+            clearInterval(timerInterval);
             workoutPaused = true;
             pauseButton.style.display = "none";
             resumeButton.style.display = "inline-block";
+            remainingTime = durations[currentExercise] - document.getElementById("timer" + currentExercise).innerHTML; // Store remaining time
         }
-    }
-        // Resume the workout when the resume button is clicked
-    function resumeWorkout() {
-        if (!interval && workoutPaused) {
-            workoutPaused = false;
-            resumeButton.style.display = "none";
-            pauseButton.style.display = "inline-block";
+
+        function resumeWorkout() {
+            console.log("Resume button clicked");
             startTimer(currentExercise, durations[currentExercise]);
+            workoutPaused = false;
+            pauseButton.style.display = "inline-block";
+            resumeButton.style.display = "none";
         }
-    }
 
-    // Timer function
-    function startTimer(key, duration) {
-        var timer = document.getElementById("timer" + key);
-        //var exercise = document.getElementById("exercise" + key);
-        var seconds = duration;
-        var interval = setInterval(function() {
-            timer.innerHTML = seconds;
-            seconds--;
-            if (seconds < 0) {
-                clearInterval(interval);
-                timer.innerHTML = "Timer ended";
-                
-                // Hide the current exercise
-                document.getElementById("exercise" + key).style.display = "none";
-                // Increment the current exercise index
-                currentExercise++;
-                
-                // Display the next exercise if available
-                if (currentExercise < totalExercises) {
-                    document.getElementById("exercise" + currentExercise).style.display = "block";
-                    startTimer(currentExercise, durations[currentExercise]);
-                    if (!workoutPaused) {
-                        startTimer(currentExercise, durations[currentExercise]);
-                    }
-                } else {
-                    // Show the completion message
-                    document.getElementById("message").style.display = "block";
-                    // Hide the pause button
-                    pauseButton.style.display = "none";       
-                    resumeButton.style.display = "none";
-         
-                }
-            }
-        }, 1000);
-    }
-
-</script>
-
-
+        function exitWorkout() {
+            window.location.href = "{{ path('exit_workout') }}";
+        }
+    </script>
 </div>
 {% endblock %}

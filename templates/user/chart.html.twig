@@ -1,0 +1,110 @@
+{% extends 'base.html.twig' %}
+<head>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    {# <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script> #}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+{% block body %}
+    <h1>Meals and Chart</h1>
+    <div id="meal-list-container">
+        <h2>Meals</h2>
+        <ul id="meal-list">
+            {% for meal in userFoodData %}
+                <li>
+                    <strong>{{ meal.foodTime }}</strong><br>
+                    <strong>{{ meal.foodName }}</strong> - Grams: {{ meal.grams }}, Calories: {{ meal.calories }}, Carbs: {{ meal.carbs }}, Fat: {{ meal.fat }}, Protein: {{ meal.protein }}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+        <canvas id="myChart"></canvas>
+
+    
+    {# <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var userFoodData = {{ userFoodData|json_encode|raw }};
+
+        // Generate the meal list
+        var mealList = $('#meal-list');
+        userFoodData.forEach(function (meal) {
+            var listItem = $('<li></li>').html('<strong>' + meal.foodTime + '</strong><br>' + '<strong>' + meal.foodName + '</strong> - Grams: ' + meal.grams + ', Calories: ' + meal.calories + ', Carbs: ' + meal.carbs + ', Fat: ' + meal.fat + ', Protein: ' + meal.protein);
+            mealList.append(listItem);
+        });
+
+        // Generate the chart
+        var chartData = {
+            labels: userFoodData.map(function (meal) { return meal.foodName; }),
+            datasets: [
+                {
+                    label: 'Calories',
+                    data: userFoodData.map(function (meal) { return meal.calories; }),
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }
+            ]
+        };
+
+        var mealChart = new Chart($('#meal-chart'), {
+            type: 'bar',
+            data: chartData,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+</script> #}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Fetch meal data from the server using AJAX
+        $.ajax({
+            type: "GET",
+            url: "{{ path('meal_chart') }}",
+            success: function(response) {
+                var userFoodData = response.data;
+                console.log('Meal data fetched successfully:', userFoodData);
+                // Generate the meal list
+                var mealList = $('#meal-list');
+                userFoodData.forEach(function (meal) {
+                    var listItem = $('<li></li>').html('<strong>' + meal.foodTime + '</strong><br>' + '<strong>' + meal.foodName + '</strong> - Grams: ' + meal.grams + ', Calories: ' + meal.calories + ', Carbs: ' + meal.carbs + ', Fat: ' + meal.fat + ', Protein: ' + meal.protein);
+                    mealList.append(listItem);
+                });
+
+                // Generate the chart
+                var chartData = {
+                    labels: userFoodData.map(function (meal) { return meal.foodName; }),
+                    datasets: [
+                        {
+                            label: 'Calories',
+                            data: userFoodData.map(function (meal) { return meal.calories; }),
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                };
+
+                var mealChart = new Chart($('#meal-chart'), {
+                    type: 'bar',
+                    data: chartData,
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching meal data:', error);
+            }
+        });
+    });
+</script>
+{% endblock %}
