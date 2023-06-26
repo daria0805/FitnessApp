@@ -1,14 +1,109 @@
 {% extends 'base.html.twig' %}
 
-{% block head %}
-{{ parent() }}
-    <link rel="stylesheet" href="{{ asset('css/css.css') }}">
-{% endblock %}
-
 {% block body %}
+<style>
+body {
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+     margin-bottom: 20px;
+  color: #333;
+}
+
+p {
+  margin-bottom: 10px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  margin-bottom: 5px;
+}
+
+.diet {
+  margin: 50px auto;
+  max-width: 800px;
+  padding: 20px;
+  text-align: center;
+    background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.meal-container {
+  margin-bottom: 30px;
+}
+
+.meal-container ul {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 5px;
+}
+
+.meal-container li {
+  padding: 5px;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+}
+
+/* Toggle button styles */
+.toggle-button {
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.toggle-button:hover {
+  background-color: #0056b3;
+}
+
+/* Add button styles */
+.add-button {
+  padding: 2px 5px;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  float: right;
+}
+
+.add-button:hover {
+  background-color: #1e7e34;
+}
+
+/* Search input styles */
+input[type="text"] {
+  margin-bottom: 10px;
+  padding: 5px;
+  border: 1px solid #ccc;
+}
+
+/* Chart button styles */
+.btn-primary {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 20px;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+</style>
+<div class="diet">
 <h1>Diet Organizer</h1>
     <h1>Breakfast</h1>
-    <button class="toggle-button" data-container="breakfast">Toggle Breakfast</button>
+    <button class="toggle-button" data-container="breakfast">See Breakfast</button>
     <div id="breakfast-container" class="meal-container">
         <input type="text" id="breakfast-search" placeholder="Search...">
         <ul id="breakfast-list">
@@ -20,10 +115,9 @@
             {% endfor %}
         </ul>
     </div>
-    <p>Total calories: {{ breakfastCalories }}</p>
 
     <h1>Lunch</h1>
-    <button class="toggle-button" data-container="lunch">Toggle Lunch</button>
+    <button class="toggle-button" data-container="lunch">See Lunch</button>
     <div id="lunch-container" class="meal-container">
         <input type="text" id="lunch-search" placeholder="Search...">
         <ul id="lunch-list">
@@ -35,10 +129,9 @@
             {% endfor %}
         </ul>
     </div>
-    <p>Total calories: {{ lunchCalories }}</p>
 
     <h1>Dinner</h1>
-    <button class="toggle-button" data-container="dinner">Toggle Dinner</button>
+    <button class="toggle-button" data-container="dinner">See Dinner</button><br>
     <div id="dinner-container" class="meal-container">
         <input type="text" id="dinner-search" placeholder="Search...">
         <ul id="dinner-list">
@@ -50,10 +143,10 @@
             {% endfor %}
         </ul>
     </div>
-    <p>Total calories: {{ dinnerCalories }}</p>
+   
 
-     <a href="{{ path('meal_chart') }}" class="btn btn-primary">View Meals and Chart</a>
-
+     <a href="{{ path('user_food_list') }}" class="btn btn-primary">View Daily Summary</a>
+</div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {

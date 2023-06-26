@@ -73,7 +73,13 @@ weight_list:
     path: /user/list
     controller: App\Controller\UserController::list
     methods: GET
-    
+user_food_list:       
+    path: /user/user-food-list
+    controller: App\Controller\UserController::listUserMeals
+    methods: GET
+app_calculate_calories:
+    path: /calculate-calories
+    controller: App\Controller\UserController::calculateCalories
 # -------------------MEAL-----------
 meal_index:
     path: /meal
@@ -113,10 +119,27 @@ yoga_controller:
 yoga_start:
     path: /start
     controller: App\Controller\YogaController::startWorkout
-    methods: GET
+    methods: [GET]
 exit_workout:
     path: /exit-workout
     controller: App\Controller\YogaController::exitWorkout
+    methods: [GET]
+# ------------------STRETCHING-----------
+stretching_controller:
+    path: /stretching
+    controller: App\Controller\StretchingController::index
+    methods: GET
+    requirements:
+        exerciseId: \d+
+stretching_start:
+    path: /stretching-start
+    controller: App\Controller\StretchingController::startWorkout
+    methods: [GET]
+streching_exit_workout:
+    path: /streching-exit-workout
+    controller: App\Controller\StretchingController::exitWorkout
+    methods: [GET]
+
 # ------------------USER MEAL FOOD-----------
 add_meal_to_user_food:
   path: /add-meal-to-user-food

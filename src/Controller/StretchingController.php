@@ -8,9 +8,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\ExerciseRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
-class YogaController extends AbstractController
+class StretchingController extends AbstractController
 {
     private $exerciseRepository;
     private $entityManager;
@@ -21,7 +20,6 @@ class YogaController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
-    //#[Route('/yoga', name: 'app_yoga')]
     /**
      * index
      *
@@ -30,7 +28,7 @@ class YogaController extends AbstractController
      */
     public function index(ExerciseRepository $exerciseRepository): Response
     {
-        $exercises = $exerciseRepository->findBy(['type' => 'yoga']);
+        $exercises = $exerciseRepository->findBy(['type' => 'stretching']);
         $durations = $this->calculateDurations($exercises);
         $exercisePhotos = [];
         foreach ($exercises as $exercise) {
@@ -41,7 +39,7 @@ class YogaController extends AbstractController
             throw $this->createNotFoundException('Exercises not found');
         }
 
-        return $this->render('yoga/index.html.twig', [
+        return $this->render('stretching/index.html.twig', [
             'exercises' => $exercises,
             'durations' => $durations,
             'exercisePhotos' => $exercisePhotos,
@@ -83,7 +81,7 @@ class YogaController extends AbstractController
     {
         $showExerciseTitle = true;
 
-        return $this->render('yoga/index.html.twig', [
+        return $this->render('streching/index.html.twig', [
             'showExerciseTitle' => $showExerciseTitle,
         ]);
     }

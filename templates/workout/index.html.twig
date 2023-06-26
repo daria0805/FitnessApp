@@ -6,93 +6,194 @@
 <style>
     .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    .container-workout {
+        margin: 50px auto;
+        max-width: 800px;
+        padding: 20px;
+        text-align: center;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
 </style>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-
-<div class="album py-5 bg-body-tertiary">
+<div class="container-workout">
     <div class="container">
-    <div class="text-center">
-        <h1>Here are your workouts!</h1>
-        <h3>What will you choose today?</h3>
-        <br><br>
-    </div>
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-      {# ------------------------YOGA #}
-      <div class="col">
-          <div class="card shadow-lg">
-            <img src="https://i.postimg.cc/gJNzn1sf/yoga2.jpg" class="img-thumbnail" alt="img" width="100%" height="255" aria-label="Placeholder: Thumbnail">
-            <div class="card-body">
-              <p class="card-text">
-              <h4>Yoga</h4> 
-                    Yoga is the integration of body and breath through stretching, isometric bodyweight exercises, and moving meditation. 
-                            Regular practice will help mobilize joints, stretch ligaments and strengthen muscles — in summary, keep you limber.
-              </p>
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                  <button onclick="window.location.href = '/start';">Try it!</button>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div class="text-center">
+            <h1>Here are your workouts!</h1>
+            <h3>What will you choose today?</h3>
+            <br><br>
         </div>
+        <div class="row gutter">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                {# ------------------------YOGA #}
+                <div class="col mx-auto my-2">
+                    <div class="card shadow-lg">
+                        <img src="{{ asset('images/yoga2.jpg') }}" alt="Descrierea imaginii" class="img-thumbnail" alt="img" width="100%" height="255" aria-label="Placeholder: Thumbnail">
+                        <div class="card-body">
+                            <p class="card-text">
+                                <h4>Yoga</h4>
+                                Yoga is a holistic practice that combines physical postures, breathing exercises, and meditation, promoting strength, flexibility, and inner peace.
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    {% if app.user %}
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#yogaModal">
+                                        Try it!
+                                    </button>
+                                    {% else %}
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#yogaModal">
+                                        Try it!
+                                    </button>
+                                    <div class="modal fade" id="yogaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <h1>Please sign in first!</h1>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    <button type="button" class="btn btn-primary" onclick="redirectToLoginPage()">Login</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-        {# ------------------------STRETCHING#}
-      <div class="col">
-          <div class="card shadow-lg">
-            <img src="https://i.postimg.cc/1XQd1zDS/exercitii-stretching.jpg" class="img-thumbnail" alt="img" width="100%" height="225" aria-label="Placeholder: Thumbnail">
-            <div class="card-body">
-              <p class="card-text">
-              <h4>Stretching</h4> 
-                    Every stretch can be either static or dynamic and passive or active. 
-                    Dynamic and active stretches are more helpful for improving functional movements used in everyday life and sports.
-              </p>
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                  <button onclick="window.location.href = '/create/workout';">Try it!</button>
+                {# ------------------------STRETCHING#}
+                <div class="col mx-auto my-2">
+                    <div class="card shadow-lg">
+                        <img src="{{ asset('images/stretching.jpg') }}" alt="Descrierea imaginii" class="img-thumbnail" alt="img" width="100%" height="225" aria-label="Placeholder: Thumbnail">
+                        <div class="card-body">
+                            <p class="card-text">
+                                <h4>Stretching</h4>
+                                Stretching exercises help increase flexibility, relieve muscle tension, and improve range of motion and enhancing overall physical performance.
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    {% if app.user %}
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#stretchingModal">
+                                        Try it!
+                                    </button>
+                                    {% else %}
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#stretchingModal">
+                                        Try it!
+                                    </button>
+                                    <div class="modal fade" id="stretchingModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <h1>Please sign in first!</h1>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    <button type="button" class="btn btn-primary" onclick="redirectToLoginStretchingPage()">Login</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
         </div>
-        {# ------------------------PILATES#}
-       <div class="col">
-          <div class="card shadow-lg">
-            <img src="https://i.postimg.cc/c48cBW3M/pilates.jpg" class="img-thumbnail" alt="img" width="100%" height="225" aria-label="Placeholder: Thumbnail">
-            <div class="card-body">
-              <p class="card-text">
-              <h4>Pilates</h4> 
-                    Developed by Joseph Pilates, this method of exercise incorporates controlled movements with an emphasis on alignment, breathing and building the core—referred to by Pilates instructors as the “Powerhouse”. 
-                    Over time Pilates will not only increase flexibility but help improve coordination, balance and all-round stability.
-              </p>
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                  <button type="button" class="btn btn-md btn-outline-primary">Try it!</button>
+    </div>
+
+    <div class="modal fade" id="yogaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Welcome to yoga!</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        </div>
-        {# -------------------------CREATE WORKOUT #}
-          <div class="col">
-          <div class="card shadow-sm">
-            
-            <div class="card-body">
-              <p class="card-text">
-              <h4>Create your own workout!</h4> 
-                    Feel free to choose from a variety of at home exercises! You don't need gym equipment only dedication and the will to sweat it out!
-              </p>
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                  {% if app.user %}
-                        <button onclick="window.location.href = '';">Create New Workout +</button>
-                  {% endif %}
+                <div class="modal-body">
+                    <h2>Here are some instructions for you:</h2>
+                    1. Find a quiet and open space where you can perform the yoga exercises.<br>
+                    2. Make sure you have a mat or a soft surface to lie on.<br>
+                    3. Make sure you have water nearby.<br>
+                    4. Start by sitting in a meditation position with your legs crossed and your hands on your knees.<br>
+                    5. Close your eyes and focus on your breath, taking deep and slow breaths.<br>
+                    6. Once you feel calm and focused, get ready to start the exercises.<br>
+                    7. Press the "Start" button to begin the yoga workout.<br>
+                    8. The first exercise will last for 60 seconds. Follow the instructions for that exercise, focusing on your breath and body movements.<br>
+                    9. After completing the first exercise, you can take a short break to rest and prepare for the next exercise by pressing the Pause button.<br>
+                    10. Continue with each exercise in order, following the 60-second duration for each exercise.<br>
+                    11. In total, the workout will last for 6 minutes, including the 6 exercises.<br>
+                    12. At the end of the workout, you will be notified that you have finished. Press the "Finish" button to end the workout.
                 </div>
-              </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="redirectToYogaPage()">Start</button>
+                </div>
             </div>
-          </div>
         </div>
+    </div>
+
+    <div class="modal fade" id="stretchingModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Welcome to stretching!</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h2>Here are some instructions for you:</h2>
+                    1. Find a quiet and open space where you can perform the stretching exercises.<br>
+                    2. Make sure you have a mat or a soft surface to lie on.<br>
+                    3. Make sure you have water nearby.<br>
+                    4. Start by sitting in a comfortable position.<br>
+                    5. Close your eyes and take a few deep breaths to relax.<br>
+                    6. Slowly begin to stretch your muscles, focusing on the areas you want to target.<br>
+                    7. Hold each stretch for 15-30 seconds, without bouncing or jerking.<br>
+                     8. Breathe deeply and relax into each stretch.<br>
+                    9. Release the stretch slowly and move on to the next one.<br>
+                    10. Repeat the stretches as desired, focusing on your breathing and maintaining proper form.<br>
+                    11. After completing the stretches, take a few moments to relax and reflect on how your body feels.<br>
+                    12. Enjoy the benefits of your stretching session!
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="redirectToStretchingPage()">Start</button>
+                </div>
+            </div>
         </div>
+    </div>
+</div>
+</div>
+{% block javascripts %}
+<script>
+  function redirectToYogaPage() {
+    window.location.href = '{{ path('yoga_controller') }}';
+  }
+
+  function redirectToStretchingPage() {
+    window.location.href = '{{ path('stretching_controller') }}';
+  }
+   function redirectToLoginPage() {
+    window.location.href = '{{ path('app_login') }}';
+  }
+  function redirectToLoginStretchingPage() {
+    window.location.href = '{{ path('app_login') }}';
+  }
+</script>
+{% endblock %}
+
 
 {% endblock %}

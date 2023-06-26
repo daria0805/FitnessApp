@@ -3,8 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\ExerciseRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Intervention\Image\ImageManagerStatic as ImageManager;
 
 #[ORM\Entity(repositoryClass: ExerciseRepository::class)]
 class Exercise
@@ -32,6 +33,13 @@ class Exercise
     #[ORM\Column(length: 255, nullable:true)]
     private ?string $photoMimeType;
 
+    #[ORM\OneToMany(mappedBy: 'exercise', targetEntity: Session::class, orphanRemoval: true)]
+    private Collection $sessions;
+
+    public function __construct()
+    {
+        $this->sessions = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -92,9 +100,6 @@ class Exercise
     {
         $this->photo = $photo;
         $this->photoMimeType = $photoMimeType;
-        if ($photo) {
-            $this->resizePhoto();
-        }
 
         return $this;
     }
@@ -102,19 +107,34 @@ class Exercise
     {
         return $this->photoMimeType;
     }
-    private function resizePhoto(): void
+
+    /**
+     * @return Collection<int, Session>
+     */
+    public function getSessions(): Collection
     {
-        $photoPath = 'images/exercises/' . $this->photo;
-        $resizedPhotoPath = 'images/exercises/' . $this->photo;
+        return $this->sessions;
+    }
 
-        // Define the desired width and height for the resized image
-        $desiredWidth = 800;
-        $desiredHeight = 600;
+    public function addSession(Session $session): static
+    {
+        if (!$this->sessions->contains($session)) {
+            $this->sessions->add($session);
+            $session->setExercise($this);
+        }
 
-        // Resize the image using Intervention Image library
-        $resizedImage = ImageManager::make($photoPath)->fit($desiredWidth, $desiredHeight);
+        return $this;
+    }
 
-        // Save the resized image to the specified path
-        $resizedImage->save($resizedPhotoPath);
+    public function removeSession(Session $session): static
+    {
+        if ($this->sessions->removeElement($session)) {
+            // set the owning side to null (unless already changed)
+            if ($session->getExercise() === $this) {
+                $session->setExercise(null);
+            }
+        }
+
+        return $this;
     }
 }

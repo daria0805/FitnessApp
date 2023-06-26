@@ -2,7 +2,68 @@
 
 {% block title %}Log in!{% endblock %}
 
+{% block stylesheets %}
+    <style>
+        .form-container {
+            width: 80%;
+            margin: auto;
+            text-align: center;
+        }
 
+        .form-container h1 {
+            font-size: 3rem;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-container input {
+            display: block;
+            width: 60%;
+            height: 2rem;
+            margin: 1rem auto;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1.2rem;
+            outline: none;
+        }
+
+        .form-container button {
+            display: block;
+            width: 40%;
+            margin: 2rem auto;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .form-container button:hover {
+            background-color: #0056b3;
+        }
+
+        .form-container p {
+            margin-top: 1rem;
+        }
+
+        .form-container a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .container-form{
+              margin: 50px auto;
+                max-width: 800px;
+                padding: 20px;
+                text-align: center;
+                    background-color: #fff;
+                border-radius: 5px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+{% endblock %}
 {% block body %}
 <form method="post">
     {% if error %}
@@ -12,19 +73,13 @@
     {% if app.user %}
         <div class="mb-3">
             You are logged in as {{ app.user.email }}, <a href="{{ path('app_logout') }}">Logout</a>
-            <img src="/src/imagPeople.jpg" alt="ana are mere">
-            {{ dump(app.user.roles) }}
         </div>
     {% endif %}
-
-
-    <div class="w-4/5 m-auto text-center">
-        <div class="py-12 border-b border-gray-200">
-            <h1 class="text-6xl pt-12 pb-8">
-                Login
-            </h1>
+<div class="container-form">
+<div class="form-container">
+           <h1 class="h3 mb-3 font-weight-normal">Please log in</h1>
     
-            <input 
+            {# <input 
                 type="email" 
                 value="{{ last_username }}" 
                 name="email" 
@@ -34,14 +89,33 @@
                 autocomplete="email" 
                 required 
                 autofocus
+            > #}
+            <input
+                type="email"
+                value="{{ last_username }}"
+                name="email"
+                class="form-control"
+                id="inputEmail"
+                placeholder="Email address"
+                autocomplete="email"
+                required
+                autofocus
             >
 
-            <input 
+            {# <input 
                 type="password" 
                 name="password" 
                 id="inputPassword" 
                 class="bg-transparent block mt-10 mx-auto border-b-2 w-1/5 h-20 text-2xl outline-none" 
                 autocomplete="current-password" 
+                placeholder="Password"
+                required
+            > #}
+            <input
+                type="password"
+                name="password"
+                id="inputPassword"
+                 class="form-control"
                 placeholder="Password"
                 required
             >
@@ -52,15 +126,15 @@
                 value="{{ csrf_token('authenticate') }}"
             >
 
-            <button 
+            {# <button 
                 class="uppercase mt-15 bg-blue-500 text-gray-100 text-lg w-1/5 mt-10 font-extrabold py-4 px-8 rounded-3xl" 
                 type="submit">
                 Sign in
-            </button>
+            </button> #}
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
             <p>Don't have an account?</p>
             <button onclick="window.location.href = '/register';">Register here!</button>
         </form>
-    </div>
+        </div>
 </div>
-    
 {% endblock %}

@@ -11,11 +11,9 @@ use App\Form\WeightFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Meal;
 use App\Entity\UserFood;
+use App\Repository\UserFoodRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\VarDumper\VarDumper;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\SerializerInterface;
 
 class UserController extends AbstractController
 {
@@ -247,6 +245,63 @@ class UserController extends AbstractController
 
         return new JsonResponse(['success' => true]);
     }
+    public function listUserMeals(UserFoodRepository $userFoodRepository)
+    {
+        $entityManager = $this->entityManager;
+        $query = $entityManager->createQuery('SELECT d FROM App\Entity\DietPlanDatabase d');
+        $dietPlan = $query->getOneOrNullResult();
+
+        $breakfastCalories = $dietPlan->getBreakfastCalories();
+        $lunchCalories = $dietPlan->getLunchCalories();
+        $dinnerCalories = $dietPlan->getDinnerCalories();
+        $totalCalories = $dietPlan->getTotalCalorieIntake();
+        $weight = $dietPlan->getWeight();
+
+        $totalCaloriesUserFood = $this->calculateTotalCaloriesFromDatabase();
+        // dd($totalCaloriesUserFood);
+        $breakfastFoods = $userFoodRepository->findBy(['foodTime' => 'breakfast']);
+        $lunchFoods = $userFoodRepository->findBy(['foodTime' => 'lunch']);
+        $dinnerFoods = $userFoodRepository->findBy(['foodTime' => 'dinner']);
+        return $this->render('user/user_food_list.html.twig', [
+            'breakfastFoods' => $breakfastFoods,
+            'lunchFoods' => $lunchFoods,
+            'dinnerFoods' => $dinnerFoods,
+            'breakfastCalories' => $breakfastCalories,
+            'lunchCalories' => $lunchCalories,
+            'dinnerCalories' => $dinnerCalories,
+            'totalCalories' => $totalCalories,
+            'weight' => $weight,
+            'totalCaloriesUserFood' => $totalCaloriesUserFood,
+            ]);
+    }
+    private function calculateTotalCaloriesFromDatabase(): array
+    {
+        $totalCaloriesUserFood = [];
+
+        // Obține alimentele pentru fiecare categorie din baza de date
+        $breakfastFoods = $this->entityManager->getRepository(UserFood::class)->findBy(['foodTime' => 'breakfast']);
+        $lunchFoods = $this->entityManager->getRepository(UserFood::class)->findBy(['foodTime' => 'lunch']);
+        $dinnerFoods = $this->entityManager->getRepository(UserFood::class)->findBy(['foodTime' => 'dinner']);
+
+        // Calculează suma caloriilor pentru fiecare categorie
+        $totalCaloriesUserFood['breakfast'] = 0;
+        foreach ($breakfastFoods as $food) {
+            $totalCaloriesUserFood['breakfast'] += $food->getCalories();
+        }
+
+        $totalCaloriesUserFood['lunch'] = 0;
+        foreach ($lunchFoods as $food) {
+            $totalCaloriesUserFood['lunch'] += $food->getCalories();
+        }
+
+        $totalCaloriesUserFood['dinner'] = 0;
+        foreach ($dinnerFoods as $food) {
+            $totalCaloriesUserFood['dinner'] += $food->getCalories();
+        }
+
+        return $totalCaloriesUserFood;
+    }
+
     /**
      * mealChart
      *
@@ -261,39 +316,4 @@ class UserController extends AbstractController
         //     'userFoodData' => $userFoodData,
         // ]);
     }
-    // public function prepareData(): Response
-    // {
-    //     // Fetch and process data from the database
-    //     $userFoodData = $this->entityManager->getRepository(MyEntity::class)->findAll();
-
-    //     // Prepare the data for chart rendering
-    //     $chartData = [
-    //         'labels' => [],
-    //         'data' => [],
-    //     ];
-
-    //     foreach ($userFoodData as $item) {
-    //         $chartData['labels'][] = $item->getName();
-    //         $chartData['data'][] = $item->getValue();
-    //     }
-
-    //     // Return a JSON response with the prepared chart data
-    //     return new JsonResponse($chartData);
-    //     return $this->render('user/chart.html.twig', [
-    //         'chartData' => $chartData,
-    //     ]);
-    // }
-    // public function serializeEntity(SerializerInterface $serializer): Response
-    // {
-    //     // Fetch your entity from the database
-    //     $userFoodData = $this->entityManager->getRepository(MyEntity::class)->findAll();
-
-    //     // Serialize the entity while ignoring circular references
-    //     $serializedData = $serializer->serialize($userFoodData, 'json', ['circular_reference_handler' => function ($object) {
-    //         return $object->getId();
-    //     }]);
-
-    //     // Return the serialized data as a response
-    //     return new Response($serializedData);
-    // }
 }
