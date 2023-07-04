@@ -14,6 +14,7 @@ use App\Entity\UserFood;
 use App\Repository\UserFoodRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserController extends AbstractController
 {
@@ -104,42 +105,42 @@ class UserController extends AbstractController
      * @param  mixed $dietPlanDatabase
      * @return Response
      */
-    public function edit(Request $request, DietPlanDatabase $dietPlanDatabase, int $id): Response
-    {
-        $form = $this->createForm(WeightFormType::class);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $newWeight  = $form->get('weight')->getData();
+    // public function edit(Request $request, DietPlanDatabase $dietPlanDatabase, int $id): Response
+    // {
+    //     $form = $this->createForm(WeightFormType::class);
+    //     $form->handleRequest($request);
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         $newWeight  = $form->get('weight')->getData();
 
-            $activityFactor = 1.2;
-            $bmr = 370 + (21.6 * ($newWeight  - (0.23 * $newWeight )));
-            $newtotalCalorieIntake = $bmr * $activityFactor;
-            $newtotalCalorieIntake = round($newtotalCalorieIntake);
+    //         $activityFactor = 1.2;
+    //         $bmr = 370 + (21.6 * ($newWeight  - (0.23 * $newWeight )));
+    //         $newtotalCalorieIntake = $bmr * $activityFactor;
+    //         $newtotalCalorieIntake = round($newtotalCalorieIntake);
 
-            $breakfastPercentage = 0.3; // 30%
-            $lunchPercentage = 0.4; // 40%
-            $dinnerPercentage = 0.3; // 30%
+    //         $breakfastPercentage = 0.3; // 30%
+    //         $lunchPercentage = 0.4; // 40%
+    //         $dinnerPercentage = 0.3; // 30%
 
-            $newbreakfastCalories = $newtotalCalorieIntake * $breakfastPercentage;
-            $newlunchCalories = $newtotalCalorieIntake * $lunchPercentage;
-            $newdinnerCalories = $newtotalCalorieIntake * $dinnerPercentage;
+    //         $newbreakfastCalories = $newtotalCalorieIntake * $breakfastPercentage;
+    //         $newlunchCalories = $newtotalCalorieIntake * $lunchPercentage;
+    //         $newdinnerCalories = $newtotalCalorieIntake * $dinnerPercentage;
 
-            $dietPlanDatabase->setWeight($newWeight);
-            $dietPlanDatabase->setTotalCalorieIntake($newtotalCalorieIntake);
-            $dietPlanDatabase->setBreakfastCalories($newbreakfastCalories);
-            $dietPlanDatabase->setLunchCalories($newlunchCalories);
-            $dietPlanDatabase->setDinnerCalories($newdinnerCalories);
+    //         $dietPlanDatabase->setWeight($newWeight);
+    //         $dietPlanDatabase->setTotalCalorieIntake($newtotalCalorieIntake);
+    //         $dietPlanDatabase->setBreakfastCalories($newbreakfastCalories);
+    //         $dietPlanDatabase->setLunchCalories($newlunchCalories);
+    //         $dietPlanDatabase->setDinnerCalories($newdinnerCalories);
 
-            $this->entityManager->persist($dietPlanDatabase);
-            $this->entityManager->flush();
-            return $this->redirectToRoute('weight_list', ['id' => $dietPlanDatabase->getId()]);
-        }
+    //         $this->entityManager->persist($dietPlanDatabase);
+    //         $this->entityManager->flush();
+    //         return $this->redirectToRoute('weight_list', ['id' => $dietPlanDatabase->getId()]);
+    //     }
 
-        return $this->render('user/edit.html.twig', [
-            'form' => $form->createView(),
-            'dietPlanDatabase' => $dietPlanDatabase,
-        ]);
-    }
+    //     return $this->render('user/edit.html.twig', [
+    //         'form' => $form->createView(),
+    //         'dietPlanDatabase' => $dietPlanDatabase,
+    //     ]);
+    // }
     /**
      * delete
      *
@@ -242,26 +243,38 @@ class UserController extends AbstractController
 
         $entityManager->persist($userFood);
         $entityManager->flush();
-
+        $this->addFlash('success', 'The item was added to your organizer!');
         return new JsonResponse(['success' => true]);
     }
-    public function listUserMeals(UserFoodRepository $userFoodRepository)
+    public function listUserMeals(UserFoodRepository $userFoodRepository, Security $security)
     {
         $entityManager = $this->entityManager;
-        $query = $entityManager->createQuery('SELECT d FROM App\Entity\DietPlanDatabase d');
-        $dietPlan = $query->getOneOrNullResult();
-
-        $breakfastCalories = $dietPlan->getBreakfastCalories();
-        $lunchCalories = $dietPlan->getLunchCalories();
-        $dinnerCalories = $dietPlan->getDinnerCalories();
-        $totalCalories = $dietPlan->getTotalCalorieIntake();
-        $weight = $dietPlan->getWeight();
-
-        $totalCaloriesUserFood = $this->calculateTotalCaloriesFromDatabase();
-        // dd($totalCaloriesUserFood);
-        $breakfastFoods = $userFoodRepository->findBy(['foodTime' => 'breakfast']);
-        $lunchFoods = $userFoodRepository->findBy(['foodTime' => 'lunch']);
-        $dinnerFoods = $userFoodRepository->findBy(['foodTime' => 'dinner']);
+        $user = $security->getUser();
+        //$userId = $user->getId();
+        $query = $entityManager->createQuery('SELECT d FROM App\Entity\DietPlanDatabase d WHERE d.user = :user');
+        $query->setParameter('user', $user);
+        $dietPlan = $query->setMaxResults(1)->getOneOrNullResult();
+        $breakfastCalories = null;
+        $lunchCalories = null;
+        $dinnerCalories = null;
+        $totalCalories = null;
+        $weight = null;
+        $totalCaloriesUserFood = null;
+        $breakfastFoods = [];
+        $lunchFoods = [];
+        $dinnerFoods = [];
+        if ($user !== null) {
+            // $breakfastCalories = $dietPlan->getBreakfastCalories($user);
+            $breakfastCalories = $dietPlan->getBreakfastCalories();
+            $lunchCalories = $dietPlan->getLunchCalories();
+            $dinnerCalories = $dietPlan->getDinnerCalories();
+            $totalCalories = $dietPlan->getTotalCalorieIntake();
+            $weight = $dietPlan->getWeight();
+            $totalCaloriesUserFood = $this->calculateTotalCaloriesFromDatabase($user);
+            $breakfastFoods = $userFoodRepository->findBy(['foodTime' => 'breakfast', 'user' => $user]);
+            $lunchFoods = $userFoodRepository->findBy(['foodTime' => 'lunch', 'user' => $user]);
+            $dinnerFoods = $userFoodRepository->findBy(['foodTime' => 'dinner', 'user' => $user]);
+        }
         return $this->render('user/user_food_list.html.twig', [
             'breakfastFoods' => $breakfastFoods,
             'lunchFoods' => $lunchFoods,
@@ -272,31 +285,33 @@ class UserController extends AbstractController
             'totalCalories' => $totalCalories,
             'weight' => $weight,
             'totalCaloriesUserFood' => $totalCaloriesUserFood,
+            'dietplan' => $dietPlan
             ]);
     }
-    private function calculateTotalCaloriesFromDatabase(): array
+    private function calculateTotalCaloriesFromDatabase(UserInterface $user): array
     {
-        $totalCaloriesUserFood = [];
+            $totalCaloriesUserFood = [];
+        if ($user !== null) {
+            // Obține alimentele pentru fiecare categorie din baza de date
+            $breakfastFoods = $this->entityManager->getRepository(UserFood::class)->findBy(['foodTime' => 'breakfast']);
+            $lunchFoods = $this->entityManager->getRepository(UserFood::class)->findBy(['foodTime' => 'lunch']);
+            $dinnerFoods = $this->entityManager->getRepository(UserFood::class)->findBy(['foodTime' => 'dinner']);
 
-        // Obține alimentele pentru fiecare categorie din baza de date
-        $breakfastFoods = $this->entityManager->getRepository(UserFood::class)->findBy(['foodTime' => 'breakfast']);
-        $lunchFoods = $this->entityManager->getRepository(UserFood::class)->findBy(['foodTime' => 'lunch']);
-        $dinnerFoods = $this->entityManager->getRepository(UserFood::class)->findBy(['foodTime' => 'dinner']);
+            // Calculează suma caloriilor pentru fiecare categorie
+            $totalCaloriesUserFood['breakfast'] = 0;
+            foreach ($breakfastFoods as $food) {
+                $totalCaloriesUserFood['breakfast'] += $food->getCalories();
+            }
 
-        // Calculează suma caloriilor pentru fiecare categorie
-        $totalCaloriesUserFood['breakfast'] = 0;
-        foreach ($breakfastFoods as $food) {
-            $totalCaloriesUserFood['breakfast'] += $food->getCalories();
-        }
+            $totalCaloriesUserFood['lunch'] = 0;
+            foreach ($lunchFoods as $food) {
+                $totalCaloriesUserFood['lunch'] += $food->getCalories();
+            }
 
-        $totalCaloriesUserFood['lunch'] = 0;
-        foreach ($lunchFoods as $food) {
-            $totalCaloriesUserFood['lunch'] += $food->getCalories();
-        }
-
-        $totalCaloriesUserFood['dinner'] = 0;
-        foreach ($dinnerFoods as $food) {
-            $totalCaloriesUserFood['dinner'] += $food->getCalories();
+            $totalCaloriesUserFood['dinner'] = 0;
+            foreach ($dinnerFoods as $food) {
+                $totalCaloriesUserFood['dinner'] += $food->getCalories();
+            }
         }
 
         return $totalCaloriesUserFood;

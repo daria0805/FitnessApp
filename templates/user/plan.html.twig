@@ -111,6 +111,7 @@ input[type="text"] {
                 <li>
                     <strong>{{ meal.foodName }}</strong> - Grams: {{ meal.grams }}, Calories: {{ meal.calories }}, Carbs: {{ meal.carbs }}, Fat: {{ meal.fat }}, Protein: {{ meal.protein }}
                     <button class="add-button" data-meal-id="{{ meal.id }}" data-container="breakfast">Add</button>
+                    <div class="notification"></div>
                 </li>
             {% endfor %}
         </ul>

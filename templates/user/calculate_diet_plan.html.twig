@@ -52,8 +52,9 @@
     <div class="form-group">
         {{ form_row(form.weight) }}
         </div>
-         <button type="submit" name="calories" {% if totalCalorieIntake is defined %}disabled{% endif %} class="btn btn-primary">
-            {% if totalCalorieIntake is defined %}Edit{% else %}Calculate{% endif %}
+         {# <button type="submit" name="calories" {% if totalCalorieIntake is defined %}disabled{% endif %} class="btn btn-primary"> #}
+         <button type="submit" name="calories" class="btn btn-primary">
+            Calculate
         </button>
     {{ form_end(form) }}
 </form>

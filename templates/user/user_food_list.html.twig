@@ -35,6 +35,7 @@ h1 {
 
   p {
     margin-bottom: 10px;
+    font-size: 20px;
   }
     .total-calories {
     border: 1px solid #ccc;
@@ -107,10 +108,20 @@ h1 {
         .toggle-btn::after {
             content: "View Summary";
         }
+        .red {
+    color: red;
+}
+
+.green {
+    color: green;
+}
+
 </style>
 <div class="summary2">
+{% if app.user %}
     <h1>Diet Organizer</h1>
     <p>You are now at {{ weight }} kg and in order to loose weight you need to eat an amount of {{ totalCalories }} calories a day. <br> Here is your plan!</p>
+    
     <h2>Breakfast</h2>
     <h3>Total calories: {{ breakfastCalories }}</h3>
     <table class="table table-striped">
@@ -177,23 +188,38 @@ h1 {
 
         <h2>Breakfast</h2><br>
         <div class="total-calories">
-        <div class="color"
-            <p>Total eaten calories: {{ totalCaloriesUserFood['breakfast'] }}</p><br>
+        <div class="color {% if totalCaloriesUserFood['breakfast'] > breakfastCalories %}red{% else %}green{% endif %}">
+            <p>Total calories eaten : {{ totalCaloriesUserFood['breakfast'] }}</p><br>
             <p>Total calories: {{ breakfastCalories }}</p>
+            {% if totalCaloriesUserFood['breakfast'] > breakfastCalories %}
+                <p>Limit exceeded! &#128545;</p>
+            {% else %}
+                <p>Within limit! &#128522;</p>
+            {% endif %}
         </div>
         </div>
         <h2>Lunch</h2><br>
         <div class="total-calories">
-        <div class="color"
-            <p>Total eaten calories: {{ totalCaloriesUserFood['lunch'] }}</p><br>
+        <div class="color {% if totalCaloriesUserFood['lunch'] > lunchCalories %}red{% else %}green{% endif %}">
+            <p>Total calories eaten : {{ totalCaloriesUserFood['lunch'] }}</p><br>
             <p>Total calories: {{ lunchCalories }}</p>
+            {% if totalCaloriesUserFood['lunch'] > lunchCalories %}
+                <p>Limit exceeded! &#128545;</p>
+            {% else %}
+                <p>Within limit! &#128522;</p>
+            {% endif %}
         </div>
         </div>
         <h2>Dinner</h2><br>
         <div class="total-calories">
-        <div class="color"
-            <p>Total eaten calories: {{ totalCaloriesUserFood['dinner'] }}</p><br>
+        <div class="color {% if totalCaloriesUserFood['dinner'] > dinnerCalories %}red{% else %}green{% endif %}">
+            <p>Total calories eaten : {{ totalCaloriesUserFood['dinner'] }}</p><br>
             <p>Total calories: {{ dinnerCalories }}</p>
+            {% if totalCaloriesUserFood['dinner'] > dinnerCalories %}
+                <p>Limit exceeded! &#128545;</p>
+            {% else %}
+                <p>Within limit! &#128522;</p>
+            {% endif %}
             </div>
         </div>
 </div>
@@ -212,5 +238,6 @@ h1 {
             }
         }
     </script>
+{% endif %}
 
 {% endblock %}

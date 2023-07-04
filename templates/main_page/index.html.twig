@@ -33,6 +33,15 @@ body {
 .text-center {
   display: inline-block;
 }
+.custom-button {
+  width: 500px; /* Lățimea dorită a butonului */
+  font-size: 30px; /* Dimensiunea dorită a fontului */
+  text-align: center;
+  justify-content: center;
+
+}
+
+
 </style>
 <main role="main">
 
@@ -81,7 +90,8 @@ body {
     </div>
   </div>
  
-</div><br><br>
+</div><br>
+<br>
 
 
       <!-- Marketing messaging and featurettes
@@ -91,6 +101,25 @@ body {
       <div class="container marketing">
 
         <!-- START THE FEATURETTES -->
+        <hr class="featurette-divider">
+
+        <div class="row featurette">
+          <div class="col-md-7 order-md-2">
+            <h2 class="featurette-heading">Register now for more information!</h2>
+            <p class="lead">Transform your life through fitness! Discover a world full of energy and fulfillment through our personalized workouts and expert fitness advice. 
+                Whether you want to lose weight, tone your body, or improve your stamina and flexibility, we're here to support you every step of the way on your journey to health and well-being. 
+                Start today and witness your transformation! 
+                Click the button below to register and get more information.
+                <br><br>
+                {# <a href="/register" class="btn btn-primary btn-lg d-block mx-auto">Register now for more information!</a> #}
+                <a href="/register" class="btn btn-primary btn-sm btn-block mt-3 custom-button">Register now for more information!</a>
+
+            </p>
+          </div>
+          <div class="col-md-5 order-md-1">
+            <img class="featurette-image img-fluid mx-auto" data-src="holder.js/500x500/auto" alt="500x500" src="{{ asset('images/register.jpg') }}" alt="Descrierea imaginii" data-holder-rendered="true" style="width: 500px; height: 500px;">
+          </div>
+        </div>
 
         <hr class="featurette-divider">
 
