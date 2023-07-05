@@ -64,11 +64,11 @@
 <div class="example-wrapper">
 <div class="container2">
     <h1>Hello {{ app.user.email }}! ✅</h1>
-    <h2>Here are your stretching Exercises. Good luck!</h2>
+    <h2>Here are your yoga Exercises. Good luck!</h2>
         <div id="message" style="display: none;">
         <p>
         Well done!
-        You have completed the stretching session successfully.<br/>
+        You have completed the yoga session successfully.<br/>
             Please click on "Exit Workout"!
         </p>
     </div>
@@ -109,7 +109,7 @@
 
         function startTimer(key, duration) {
             var timer = document.getElementById("timer" + key);
-            var seconds = duration - remainingTime; // Use remaining time
+            var seconds = duration - remainingTime;
             timerInterval = setInterval(function() {
                 timer.innerHTML = seconds;
                 seconds--;
@@ -126,7 +126,7 @@
                         document.getElementById("exercise" + currentExercise).style.display = "block";
 
                         if (!workoutPaused) {
-                            remainingTime = 0; // Reset remaining time
+                            remainingTime = 0; 
                             startTimer(currentExercise, durations[currentExercise]);
                         }
                     } else {
@@ -144,7 +144,7 @@
             workoutPaused = true;
             pauseButton.style.display = "none";
             resumeButton.style.display = "inline-block";
-            remainingTime = durations[currentExercise] - document.getElementById("timer" + currentExercise).innerHTML; // Store remaining time
+            remainingTime = durations[currentExercise] - document.getElementById("timer" + currentExercise).innerHTML; 
         }
 
         function resumeWorkout() {
@@ -183,7 +183,7 @@
             document.getElementById("message").style.display = "block";
             document.getElementById("pauseButton").style.display = "none";
             document.getElementById("resumeButton").style.display = "none";
-            document.getElementById("finishButton").style.display = "none"; // Adaugă această linie pentru a ascunde butonul "Finish Workout"
+            document.getElementById("finishButton").style.display = "none"; 
         }
 
 
