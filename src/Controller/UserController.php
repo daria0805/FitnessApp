@@ -15,6 +15,8 @@ use App\Repository\UserFoodRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
+use App\Repository\UserRepository;
+use App\Entity\User;
 
 class UserController extends AbstractController
 {
@@ -270,7 +272,8 @@ class UserController extends AbstractController
             $dinnerCalories = $dietPlan->getDinnerCalories();
             $totalCalories = $dietPlan->getTotalCalorieIntake();
             $weight = $dietPlan->getWeight();
-            $totalCaloriesUserFood = $this->calculateTotalCaloriesFromDatabase($user);
+            $userRepository = $this->entityManager->getRepository(User::class);
+            $totalCaloriesUserFood = $this->calculateTotalCaloriesFromDatabase($user, $userRepository);
             $breakfastFoods = $userFoodRepository->findBy(['foodTime' => 'breakfast', 'user' => $user]);
             $lunchFoods = $userFoodRepository->findBy(['foodTime' => 'lunch', 'user' => $user]);
             $dinnerFoods = $userFoodRepository->findBy(['foodTime' => 'dinner', 'user' => $user]);
@@ -288,14 +291,15 @@ class UserController extends AbstractController
             'dietplan' => $dietPlan
             ]);
     }
-    private function calculateTotalCaloriesFromDatabase(UserInterface $user): array
+    private function calculateTotalCaloriesFromDatabase(UserInterface $user, UserRepository $userRepository): array
     {
             $totalCaloriesUserFood = [];
         if ($user !== null) {
+            $userId = $userRepository->findUserIdByUser($user);
             // Obține alimentele pentru fiecare categorie din baza de date
-            $breakfastFoods = $this->entityManager->getRepository(UserFood::class)->findBy(['foodTime' => 'breakfast']);
-            $lunchFoods = $this->entityManager->getRepository(UserFood::class)->findBy(['foodTime' => 'lunch']);
-            $dinnerFoods = $this->entityManager->getRepository(UserFood::class)->findBy(['foodTime' => 'dinner']);
+            $breakfastFoods = $this->entityManager->getRepository(UserFood::class)->findBy(['foodTime' => 'breakfast', 'user' => $userId,]);
+            $lunchFoods = $this->entityManager->getRepository(UserFood::class)->findBy(['foodTime' => 'lunch', 'user' => $userId,]);
+            $dinnerFoods = $this->entityManager->getRepository(UserFood::class)->findBy(['foodTime' => 'dinner', 'user' => $userId,]);
 
             // Calculează suma caloriilor pentru fiecare categorie
             $totalCaloriesUserFood['breakfast'] = 0;
